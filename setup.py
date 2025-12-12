@@ -1,23 +1,30 @@
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 MAJOR_VERSION = "0"
 MINOR_VERSION = "1"
 MICRO_VERSION = "72"
-VERSION = "{}.{}.{}".format(MAJOR_VERSION, MINOR_VERSION, MICRO_VERSION)
+VERSION = f"{MAJOR_VERSION}.{MINOR_VERSION}.{MICRO_VERSION}"
 
 setup(
-    name="contractions",
+    name="sane-contractions",
     version=VERSION,
-    description="Fixes contractions such as `you're` to you `are`",
-    author="Pascal van Kooten",
-    url="https://github.com/kootenpv/contractions",
+    description=(
+        "Enhanced fork of contractions library - "
+        "Expands English contractions with improved performance and new features"
+    ),
+    author="Jeremy Bruns",
+    author_email="99199491+devjerry0@users.noreply.github.com",
+    maintainer="Jeremy Bruns",
+    maintainer_email="99199491+devjerry0@users.noreply.github.com",
+    url="https://github.com/devjerry0/sane-contractions",
+    project_urls={
+        "Original Repository": "https://github.com/kootenpv/contractions",
+        "Bug Tracker": "https://github.com/devjerry0/sane-contractions/issues",
+        "Documentation": "https://github.com/devjerry0/sane-contractions#readme",
+    },
     package_data={
-        # If any package contains *.txt or *.rst files, include them:
-        # '': ['*.txt', '*.rst'],
         "contractions": ["data/*.json"]
     },
-    author_email="kootenpv@gmail.com",
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: Customer Service",
@@ -27,11 +34,12 @@ setup(
         "Operating System :: Unix",
         "Operating System :: POSIX",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Software Development",
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -43,5 +51,6 @@ setup(
     packages=find_packages(),
     zip_safe=False,
     platforms="any",
+    python_requires=">=3.10",
     install_requires=["textsearch>=0.0.21"],
 )

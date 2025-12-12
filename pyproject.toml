@@ -1,0 +1,85 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sane-contractions"
+version = "0.1.72"
+description = "Enhanced fork of contractions library - Expands English contractions with improved performance and new features"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Jeremy Bruns", email = "99199491+devjerry0@users.noreply.github.com"},
+]
+maintainers = [
+    {name = "Jeremy Bruns", email = "99199491+devjerry0@users.noreply.github.com"},
+]
+keywords = ["contractions", "nlp", "text-processing", "slang", "text-expansion"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Linguistic",
+]
+dependencies = [
+    "textsearch>=0.0.21",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0",
+    "build>=1.0",
+    "twine>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/devjerry0/sane-contractions"
+Documentation = "https://github.com/devjerry0/sane-contractions#readme"
+Repository = "https://github.com/devjerry0/sane-contractions.git"
+"Bug Tracker" = "https://github.com/devjerry0/sane-contractions/issues"
+"Original Project" = "https://github.com/kootenpv/contractions"
+
+[tool.mypy]
+python_version = "3.10"
+mypy_path = "stubs"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "PIE", "RET", "SIM", "PL"]
+ignore = ["PLR2004"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = ["-v", "--strict-markers"]
+
+[tool.coverage.run]
+source = ["contractions"]
+omit = ["tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+

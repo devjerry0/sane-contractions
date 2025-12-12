@@ -1,6 +1,10 @@
 MIT License
 
-Copyright (c) 2021 Pascal van Kooten
+Copyright (c) 2021 Pascal van Kooten (Original Author)
+Copyright (c) 2025 Jeremy Bruns (Fork Maintainer)
+
+This project is a fork of the original "contractions" library by Pascal van Kooten.
+Original repository: https://github.com/kootenpv/contractions
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -10,29 +10,62 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-      - name: Install requirements
-        run: pip install flake8 pycodestyle
-      - name: Run flake8
-        run: flake8 . --count --show-source --statistics --ignore=E501
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+      - name: Run ruff
+        run: ruff check .
+      - name: Run mypy
+        run: mypy contractions/ tests/
 
   test:
     strategy:
       matrix:
-        py-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        py-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+      fail-fast: false
     name: Pytest
     runs-on: ubuntu-latest
     needs: lint
     steps:
       - name: checkout
-        uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.py-version }}
-      - name: Install requirements
-        run: pip install pytest -r requirements.txt
-      - name: Run pytest
-        run: pytest
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+      - name: Run pytest with coverage
+        run: pytest tests/ --cov=contractions --cov-report=xml --cov-report=term
+      - name: Upload coverage to Codecov
+        if: matrix.py-version == '3.12'
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  performance:
+    name: Performance Benchmark
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install package
+        run: uv pip install --system -e .
+      - name: Run performance tests
+        run: python tests/test_performance.py
