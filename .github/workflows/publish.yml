@@ -1,14 +1,9 @@
 name: Publish to PyPI
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
-    inputs:
-      confirm:
-        description: 'Type "publish" to confirm PyPI upload'
-        required: true
-        default: 'no'
+  push:
+    tags:
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -46,23 +41,24 @@ jobs:
     name: Build and Publish to PyPI
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'release'
     permissions:
       id-token: write
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       
-      - name: Check manual confirmation
-        if: github.event_name == 'workflow_dispatch'
+      - name: Extract version from tag
+        id: get_version
         run: |
-          if [ "${{ github.event.inputs.confirm }}" != "publish" ]; then
-            echo "❌ Manual confirmation required. Type 'publish' to proceed."
-            exit 1
-          fi
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Publishing version: ${VERSION}"
+      
+      - name: Update version in _version.py
+        run: |
+          echo "__version__ = \"${{ steps.get_version.outputs.version }}\"" > contractions/_version.py
+          cat contractions/_version.py
       
       - name: Install uv
         uses: astral-sh/setup-uv@v3
