@@ -13,6 +13,7 @@ def normalize_apostrophes(contractions: dict[str, str]) -> dict[str, str]:
     return {
         contraction.replace("'", "'"): expansion
         for contraction, expansion in contractions.items()
+        if "'" in contraction
     }
 
 
