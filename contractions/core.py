@@ -120,13 +120,13 @@ def _get_ts_view_window():
 
 def fix(s: str, leftovers: bool = True, slang: bool = True) -> str:
     if leftovers and slang:
-        ts = _get_ts_leftovers_slang()
-    elif leftovers:
-        ts = _get_ts_leftovers()
-    elif slang:
-        ts = _get_ts_slang()
-    else:
-        ts = _get_ts_basic()
+        return _get_ts_leftovers_slang().replace(s)
 
-    return ts.replace(s)
+    if leftovers:
+        return _get_ts_leftovers().replace(s)
+
+    if slang:
+        return _get_ts_slang().replace(s)
+
+    return _get_ts_basic().replace(s)
 
