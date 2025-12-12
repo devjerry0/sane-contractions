@@ -1,7 +1,7 @@
 # sane-contractions
 
 [![Tests](https://github.com/devjerry0/sane-contractions/actions/workflows/commit.yml/badge.svg)](https://github.com/devjerry0/sane-contractions/actions/workflows/commit.yml)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/devjerry0/sane-contractions)
+[![codecov](https://codecov.io/gh/devjerry0/sane-contractions/branch/main/graph/badge.svg)](https://codecov.io/gh/devjerry0/sane-contractions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -31,18 +31,22 @@ pip install sane-contractions
 uv pip install sane-contractions
 ```
 
-[uv](https://github.com/astral-sh/uv) is 10-100x faster than pip and is a drop-in replacement.
+[uv](https://github.com/astral-sh/uv)
 
 ## Quick Start
 
 ```python
 import contractions
 
-contractions.fix("you're happy now")
+contractions.expand("you're happy now")
 # "you are happy now"
 
-contractions.fix("I'm sure you'll love it!")
+contractions.expand("I'm sure you'll love it!")
 # "I am sure you will love it!"
+
+# Shorthand aliases
+contractions.e("you're")  # "you are"
+contractions.p("you're", 5)  # preview with context
 ```
 
 ## Usage
@@ -53,7 +57,7 @@ contractions.fix("I'm sure you'll love it!")
 import contractions
 
 text = "I'm sure you're going to love what we've done"
-expanded = contractions.fix(text)
+expanded = contractions.expand(text)
 print(expanded)
 # "I am sure you are going to love what we have done"
 ```
@@ -61,13 +65,13 @@ print(expanded)
 ### Controlling Slang Expansion
 
 ```python
-contractions.fix("yall're gonna love this", slang=True)
+contractions.expand("yall're gonna love this", slang=True)
 # "you all are going to love this"
 
-contractions.fix("yall're gonna love this", slang=False)
+contractions.expand("yall're gonna love this", slang=False)
 # "yall are going to love this"
 
-contractions.fix("yall're gonna love this", leftovers=False)
+contractions.expand("yall're gonna love this", leftovers=False)
 # "yall are gonna love this"
 ```
 
@@ -76,9 +80,9 @@ contractions.fix("yall're gonna love this", leftovers=False)
 The library intelligently preserves the case pattern of the original contraction:
 
 ```python
-contractions.fix("you're happy")    # "you are happy"
-contractions.fix("You're happy")    # "You are happy"
-contractions.fix("YOU'RE HAPPY")    # "YOU ARE HAPPY"
+contractions.expand("you're happy")    # "you are happy"
+contractions.expand("You're happy")    # "You are happy"
+contractions.expand("YOU'RE HAPPY")    # "YOU ARE HAPPY"
 ```
 
 ### Adding Custom Contractions
@@ -87,7 +91,7 @@ Add a single contraction:
 
 ```python
 contractions.add('myword', 'my word')
-contractions.fix('myword is great')
+contractions.expand('myword is great')
 # "my word is great"
 ```
 
@@ -102,7 +106,7 @@ custom_contractions = {
 }
 contractions.add_dict(custom_contractions)
 
-contractions.fix("ain't gonna happen")
+contractions.expand("ain't gonna happen")
 # "are not going to happen"
 ```
 
@@ -110,9 +114,9 @@ Load contractions from a JSON file:
 
 ```python
 # custom_contractions.json contains: {"myterm": "my expansion", "another": "another word"}
-contractions.load_json("custom_contractions.json")
+contractions.load_file("custom_contractions.json")
 
-contractions.fix("myterm is great")
+contractions.expand("myterm is great")
 # "my expansion is great"
 ```
 
@@ -137,7 +141,7 @@ for item in preview:
 
 ## API Reference
 
-### `fix(text, leftovers=True, slang=True)`
+### `expand(text, leftovers=True, slang=True)`
 
 Expands contractions in the given text.
 
@@ -163,7 +167,7 @@ Adds multiple custom contractions at once.
 **Parameters:**
 - `dictionary` (dict): Dictionary mapping contractions to their expansions
 
-### `load_json(filepath)`
+### `load_file(filepath)`
 
 Loads custom contractions from a JSON file.
 
@@ -180,7 +184,7 @@ Preview contractions in text before expanding.
 
 **Parameters:**
 - `text` (str): The text to analyze
-- `flank` (int): Number of characters to show before/after each match
+- `context_chars` (int): Number of characters to show before/after each match
 
 **Returns:** `list[dict]` - List of matches with context information
 
@@ -280,7 +284,7 @@ This fork includes several enhancements over the original `contractions` library
 
 ### 🆕 New Features
 - **`add_dict()`** - Bulk add custom contractions from a dictionary
-- **`load_json()`** - Load contractions from JSON files
+- **`load_file()`** - Load contractions from JSON files
 - **Type hints** - Full type coverage with mypy validation
 - **Better structure** - Modular code organization (core, api modules)
 
