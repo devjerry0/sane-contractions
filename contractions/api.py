@@ -1,7 +1,7 @@
 import json
 import os
 
-from .core import (
+from .matchers import (
     _get_basic_matcher,
     _get_leftovers_matcher,
     _get_leftovers_slang_matcher,

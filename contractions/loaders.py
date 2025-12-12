@@ -1,5 +1,5 @@
 from .data_io import load_dict_data, load_list_data
-from .transforms import build_apostrophe_variants, normalize_apostrophes
+from .dict_builders import build_apostrophe_variants, normalize_apostrophes
 
 
 def load_all_contractions() -> tuple[dict[str, str], dict[str, str], dict[str, str]]:

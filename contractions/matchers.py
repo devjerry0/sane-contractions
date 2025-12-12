@@ -6,6 +6,8 @@ from .loaders import load_all_contractions
 from .state import _State
 from .validation import validate_string_param
 
+__all__ = ["fix"]
+
 _MODE_NORM = "norm"
 _MODE_OBJECT = "object"
 _CASE_INSENSITIVE = "insensitive"
