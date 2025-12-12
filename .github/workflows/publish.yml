@@ -75,18 +75,6 @@ jobs:
       - name: Install build dependencies
         run: uv pip install --system build twine
       
-      - name: Update version from git commits
-        run: |
-          COMMIT_COUNT=$(git rev-list --all --count)
-          MAJOR=$(grep 'MAJOR_VERSION = ' setup.py | sed 's/.*"\([0-9]*\)".*/\1/')
-          MINOR=$(grep 'MINOR_VERSION = ' setup.py | sed 's/.*"\([0-9]*\)".*/\1/')
-          VERSION="${MAJOR}.${MINOR}.${COMMIT_COUNT}"
-          
-          sed -i "s/MICRO_VERSION = \"[0-9]*\"/MICRO_VERSION = \"${COMMIT_COUNT}\"/" setup.py
-          sed -i "s/__version__ = \"[0-9.]*\"/__version__ = \"${VERSION}\"/" contractions/__init__.py
-          
-          echo "Building version: ${VERSION}"
-      
       - name: Build package
         run: python -m build
       
