@@ -1,9 +1,14 @@
+import re
+from pathlib import Path
+
 from setuptools import find_packages, setup
 
-MAJOR_VERSION = "0"
-MINOR_VERSION = "2"
-MICRO_VERSION = "0"
-VERSION = f"{MAJOR_VERSION}.{MINOR_VERSION}.{MICRO_VERSION}"
+version_file = Path(__file__).parent / "contractions" / "_version.py"
+version_content = version_file.read_text()
+version_match = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', version_content, re.M)
+if not version_match:
+    raise RuntimeError("Unable to find version string.")
+VERSION = version_match.group(1)
 
 setup(
     name="sane-contractions",
