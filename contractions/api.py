@@ -45,9 +45,9 @@ def load_json(filepath: str) -> None:
     add_dict(contractions_data)
 
 
-def preview(text: str, flank: int) -> list[dict[str, str | int]]:
-    if not isinstance(flank, int):
-        raise TypeError("Argument flank must be integer!")
+def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
+    if not isinstance(context_chars, int):
+        raise TypeError("Argument context_chars must be integer!")
 
     matched_contractions = _get_preview_matcher().findall(text)
     text_length = len(text)
@@ -57,7 +57,7 @@ def preview(text: str, flank: int) -> list[dict[str, str | int]]:
             "match": match.match,
             "start": match.start,
             "end": match.end,
-            "viewing_window": text[max(0, match.start - flank):min(text_length, match.end + flank)]
+            "viewing_window": text[max(0, match.start - context_chars):min(text_length, match.end + context_chars)]
         }
         for match in matched_contractions
     ]

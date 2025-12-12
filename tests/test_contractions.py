@@ -52,7 +52,7 @@ def test_ill():
 
 def test_preview():
     text = "This's a simple test including two sentences. I'd use it to test preview()."
-    preview_items = contractions.preview(text, flank=10)
+    preview_items = contractions.preview(text, context_chars=10)
     print(preview_items)
     assert len(preview_items) == 2
     assert preview_items[0]['match'] == "This's"
@@ -62,16 +62,16 @@ def test_preview():
     assert "This's" in preview_items[0]["viewing_window"]
     assert "I'd" in preview_items[1]["viewing_window"]
     text2 = ""
-    preview_items2 = contractions.preview(text2, flank=10)
+    preview_items2 = contractions.preview(text2, context_chars=10)
     assert preview_items2 == []
 
 
-def test_preview_invalid_flank():
+def test_preview_invalid_context_chars():
     text = "I'd like this"
     with pytest.raises(TypeError):
-        contractions.preview(text, flank="ten")
+        contractions.preview(text, context_chars="ten")
     with pytest.raises(TypeError):
-        contractions.preview(text, flank=10.5)
+        contractions.preview(text, context_chars=10.5)
 
 
 def test_empty_string():
