@@ -2,11 +2,8 @@ from itertools import chain
 
 from textsearch import TextSearch
 
-from .loaders import load_all_contractions
+from .bootstrap import load_all_contractions
 from .state import _State
-from .validation import validate_string_param
-
-__all__ = ["fix"]
 
 _MODE_NORM = "norm"
 _MODE_OBJECT = "object"
@@ -81,17 +78,4 @@ def _get_preview_matcher():
     return _State.preview_matcher
 
 
-def fix(text: str, leftovers: bool = True, slang: bool = True) -> str:
-    validate_string_param(text, "text")
-
-    if leftovers and slang:
-        return _get_leftovers_slang_matcher().replace(text)
-
-    if leftovers:
-        return _get_leftovers_matcher().replace(text)
-
-    if slang:
-        return _get_slang_matcher().replace(text)
-
-    return _get_basic_matcher().replace(text)
 
