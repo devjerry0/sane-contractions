@@ -13,64 +13,64 @@ def _load_dicts():
     _State.contractions_dict, _State.leftovers_dict, _State.slang_dict = load_all_contractions()
 
 
-def _get_ts_basic():
-    if _State.ts_basic is None:
+def _get_basic_matcher():
+    if _State.basic_matcher is None:
         _load_dicts()
-        _State.ts_basic = TextSearch("insensitive", "norm")
-        _State.ts_basic.add(_State.contractions_dict)
-    return _State.ts_basic
+        _State.basic_matcher = TextSearch("insensitive", "norm")
+        _State.basic_matcher.add(_State.contractions_dict)
+    return _State.basic_matcher
 
 
-def _get_ts_leftovers():
-    if _State.ts_leftovers is None:
+def _get_leftovers_matcher():
+    if _State.leftovers_matcher is None:
         _load_dicts()
-        _State.ts_leftovers = TextSearch("insensitive", "norm")
-        _State.ts_leftovers.add(_State.contractions_dict)
-        _State.ts_leftovers.add(_State.leftovers_dict)
-    return _State.ts_leftovers
+        _State.leftovers_matcher = TextSearch("insensitive", "norm")
+        _State.leftovers_matcher.add(_State.contractions_dict)
+        _State.leftovers_matcher.add(_State.leftovers_dict)
+    return _State.leftovers_matcher
 
 
-def _get_ts_slang():
-    if _State.ts_slang is None:
+def _get_slang_matcher():
+    if _State.slang_matcher is None:
         _load_dicts()
-        _State.ts_slang = TextSearch("insensitive", "norm")
-        _State.ts_slang.add(_State.contractions_dict)
-        _State.ts_slang.add(_State.slang_dict)
-    return _State.ts_slang
+        _State.slang_matcher = TextSearch("insensitive", "norm")
+        _State.slang_matcher.add(_State.contractions_dict)
+        _State.slang_matcher.add(_State.slang_dict)
+    return _State.slang_matcher
 
 
-def _get_ts_leftovers_slang():
-    if _State.ts_leftovers_slang is None:
+def _get_leftovers_slang_matcher():
+    if _State.leftovers_slang_matcher is None:
         _load_dicts()
-        _State.ts_leftovers_slang = TextSearch("insensitive", "norm")
-        _State.ts_leftovers_slang.add(_State.contractions_dict)
-        _State.ts_leftovers_slang.add(_State.leftovers_dict)
-        _State.ts_leftovers_slang.add(_State.slang_dict)
-    return _State.ts_leftovers_slang
+        _State.leftovers_slang_matcher = TextSearch("insensitive", "norm")
+        _State.leftovers_slang_matcher.add(_State.contractions_dict)
+        _State.leftovers_slang_matcher.add(_State.leftovers_dict)
+        _State.leftovers_slang_matcher.add(_State.slang_dict)
+    return _State.leftovers_slang_matcher
 
 
-def _get_ts_view_window():
-    if _State.ts_view_window is None:
+def _get_preview_matcher():
+    if _State.preview_matcher is None:
         _load_dicts()
-        _State.ts_view_window = TextSearch("insensitive", "object")
+        _State.preview_matcher = TextSearch("insensitive", "object")
         all_contraction_keys = list(chain(
             _State.contractions_dict.keys(),
             _State.leftovers_dict.keys(),
             _State.slang_dict.keys()
         ))
-        _State.ts_view_window.add(all_contraction_keys)
-    return _State.ts_view_window
+        _State.preview_matcher.add(all_contraction_keys)
+    return _State.preview_matcher
 
 
 def fix(text: str, leftovers: bool = True, slang: bool = True) -> str:
     if leftovers and slang:
-        return _get_ts_leftovers_slang().replace(text)
+        return _get_leftovers_slang_matcher().replace(text)
 
     if leftovers:
-        return _get_ts_leftovers().replace(text)
+        return _get_leftovers_matcher().replace(text)
 
     if slang:
-        return _get_ts_slang().replace(text)
+        return _get_slang_matcher().replace(text)
 
-    return _get_ts_basic().replace(text)
+    return _get_basic_matcher().replace(text)
 

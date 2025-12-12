@@ -1,24 +1,35 @@
 import json
 import os
 
-from .core import _get_ts_basic, _get_ts_leftovers, _get_ts_leftovers_slang, _get_ts_slang, _get_ts_view_window
+from .core import (
+    _get_basic_matcher,
+    _get_leftovers_matcher,
+    _get_leftovers_slang_matcher,
+    _get_preview_matcher,
+    _get_slang_matcher,
+)
 
-_MATCHER_GETTERS = (_get_ts_basic, _get_ts_leftovers, _get_ts_slang, _get_ts_leftovers_slang)
+_ALL_MATCHERS = (
+    _get_basic_matcher,
+    _get_leftovers_matcher,
+    _get_slang_matcher,
+    _get_leftovers_slang_matcher,
+)
 
 
 def add(contraction: str, expansion: str) -> None:
-    for matcher_getter in _MATCHER_GETTERS:
-        matcher_getter().add(contraction, expansion)
-    _get_ts_view_window().add([contraction])
+    for get_matcher in _ALL_MATCHERS:
+        get_matcher().add(contraction, expansion)
+    _get_preview_matcher().add([contraction])
 
 
 def add_dict(contractions_dict: dict[str, str]) -> None:
     if not contractions_dict:
         return
 
-    for matcher_getter in _MATCHER_GETTERS:
-        matcher_getter().add(contractions_dict)
-    _get_ts_view_window().add(list(contractions_dict.keys()))
+    for get_matcher in _ALL_MATCHERS:
+        get_matcher().add(contractions_dict)
+    _get_preview_matcher().add(list(contractions_dict.keys()))
 
 
 def load_json(filepath: str) -> None:
@@ -38,7 +49,7 @@ def preview(text: str, flank: int) -> list[dict[str, str | int]]:
     if not isinstance(flank, int):
         raise TypeError("Argument flank must be integer!")
 
-    matched_contractions = _get_ts_view_window().findall(text)
+    matched_contractions = _get_preview_matcher().findall(text)
     text_length = len(text)
 
     return [

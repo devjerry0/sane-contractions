@@ -6,9 +6,9 @@ class _State:
     leftovers_dict: dict[str, str] | None = None
     slang_dict: dict[str, str] | None = None
 
-    ts_leftovers: TextSearch | None = None
-    ts_leftovers_slang: TextSearch | None = None
-    ts_slang: TextSearch | None = None
-    ts_basic: TextSearch | None = None
-    ts_view_window: TextSearch | None = None
+    basic_matcher: TextSearch | None = None
+    leftovers_matcher: TextSearch | None = None
+    slang_matcher: TextSearch | None = None
+    leftovers_slang_matcher: TextSearch | None = None
+    preview_matcher: TextSearch | None = None
 
