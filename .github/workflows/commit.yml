@@ -3,10 +3,20 @@ name: commit
 
 on:
   push:
+    branches: [dev, main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   lint:
-    name: Python Lint
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -47,8 +57,9 @@ jobs:
         run: pytest tests/ --cov=contractions --cov-report=xml --cov-report=term
       - name: Upload coverage to Codecov
         if: matrix.py-version == '3.12'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
           fail_ci_if_error: false
 

@@ -31,7 +31,7 @@ pip install sane-contractions
 uv pip install sane-contractions
 ```
 
-[uv](https://github.com/astral-sh/uv) is 10-100x faster than pip. See [UV_USAGE.md](UV_USAGE.md) for more details.
+[uv](https://github.com/astral-sh/uv) is 10-100x faster than pip and is a drop-in replacement.
 
 ## Quick Start
 

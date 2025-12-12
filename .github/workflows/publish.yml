@@ -1,21 +1,71 @@
 name: Publish to PyPI
 
 on:
-  release:
-    types: [published]
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  test:
+    name: Run Tests Before Publishing
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+      
+      - name: Run ruff
+        run: ruff check .
+      
+      - name: Run mypy
+        run: mypy contractions/ tests/
+      
+      - name: Run tests with coverage
+        run: pytest tests/ --cov=contractions --cov-report=term
+  
+  deploy:
+    name: Build and Publish to PyPI
+    runs-on: ubuntu-latest
+    needs: test
     permissions:
+      contents: read
       id-token: write
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Publishing version: ${VERSION}"
+      
+      - name: Update version in _version.py
+        run: |
+          echo "__version__ = \"${{ steps.get_version.outputs.version }}\"" > contractions/_version.py
+          cat contractions/_version.py
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -23,21 +73,7 @@ jobs:
           python-version: '3.12'
       
       - name: Install build dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
-      
-      - name: Update version from git commits
-        run: |
-          COMMIT_COUNT=$(git rev-list --all --count)
-          MAJOR=$(grep 'MAJOR_VERSION = ' setup.py | sed 's/.*"\([0-9]*\)".*/\1/')
-          MINOR=$(grep 'MINOR_VERSION = ' setup.py | sed 's/.*"\([0-9]*\)".*/\1/')
-          VERSION="${MAJOR}.${MINOR}.${COMMIT_COUNT}"
-          
-          sed -i "s/MICRO_VERSION = \"[0-9]*\"/MICRO_VERSION = \"${COMMIT_COUNT}\"/" setup.py
-          sed -i "s/__version__ = \"[0-9.]*\"/__version__ = \"${VERSION}\"/" contractions/__init__.py
-          
-          echo "Building version: ${VERSION}"
+        run: uv pip install --system build twine
       
       - name: Build package
         run: python -m build
