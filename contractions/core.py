@@ -47,12 +47,21 @@ def _load_dicts():
         for contraction, expansion in _leftovers_dict.items()
     }
 
-    _unsafe_dict = {
-        combination: expansion
-        for contraction, expansion in _contractions_dict.items()
-        if contraction.lower() not in safety_keys and "'" in contraction
-        for combination in _get_combinations(contraction.split("'"), ["", "'"])
-    }
+    apostrophe_variants = ["", "'"]
+    _unsafe_dict = {}
+
+    for contraction, expansion in _contractions_dict.items():
+        if "'" not in contraction:
+            continue
+
+        if contraction.lower() in safety_keys:
+            continue
+
+        tokens = contraction.split("'")
+        combinations = _get_combinations(tokens, apostrophe_variants)
+
+        for combination in combinations:
+            _unsafe_dict[combination] = expansion
 
     _slang_dict.update(_unsafe_dict)
 
