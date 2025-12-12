@@ -140,3 +140,33 @@ def test_load_json_invalid_json():
             contractions.load_json(temp_path)
     finally:
         os.unlink(temp_path)
+
+
+def test_load_json_non_dict():
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
+        json.dump(["not", "a", "dict"], f)
+        temp_path = f.name
+
+    try:
+        with pytest.raises(ValueError, match="must contain a dictionary"):
+            contractions.load_json(temp_path)
+    finally:
+        os.unlink(temp_path)
+
+
+def test_fix_leftovers_only():
+    text = "I'm happy you're here"
+    result = contractions.fix(text, leftovers=True, slang=False)
+    assert result == "I am happy you are here"
+
+
+def test_fix_slang_only():
+    text = "I'm happy you're here"
+    result = contractions.fix(text, leftovers=False, slang=True)
+    assert result == "I am happy you are here"
+
+
+def test_fix_basic_only():
+    text = "I'm happy you're here"
+    result = contractions.fix(text, leftovers=False, slang=False)
+    assert result == "I am happy you are here"
