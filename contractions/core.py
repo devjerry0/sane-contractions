@@ -34,14 +34,6 @@ def _load_dicts():
     assert json_data is not None
     _slang_dict = json.loads(json_data.decode("utf-8"))
 
-    months = [
-        "january", "february", "march", "april", "june", "july",
-        "august", "september", "october", "november", "december",
-    ]
-    for month_name in months:
-        abbreviation = month_name[:3] + "."
-        _contractions_dict[abbreviation] = month_name
-
     _contractions_dict |= {
         contraction.replace("'", "'"): expansion
         for contraction, expansion in _contractions_dict.items()
