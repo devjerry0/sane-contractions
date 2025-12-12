@@ -1,13 +1,12 @@
-from .data_io import load_json_data
+from .data_io import load_dict_data, load_list_data
 from .transforms import build_apostrophe_variants, normalize_apostrophes
 
 
 def load_all_contractions() -> tuple[dict[str, str], dict[str, str], dict[str, str]]:
-    contractions_dict: dict[str, str] = load_json_data("contractions_dict.json")  # type: ignore[assignment]
-    leftovers_dict: dict[str, str] = load_json_data("leftovers_dict.json")  # type: ignore[assignment]
-    slang_dict: dict[str, str] = load_json_data("slang_dict.json")  # type: ignore[assignment]
-    safety_keys_list: list[str] = load_json_data("safety_keys.json")  # type: ignore[assignment]
-    safety_keys = frozenset(safety_keys_list)
+    contractions_dict = load_dict_data("contractions_dict.json")
+    leftovers_dict = load_dict_data("leftovers_dict.json")
+    slang_dict = load_dict_data("slang_dict.json")
+    safety_keys = frozenset(load_list_data("safety_keys.json"))
 
     contractions_dict |= normalize_apostrophes(contractions_dict)
     leftovers_dict |= normalize_apostrophes(leftovers_dict)
