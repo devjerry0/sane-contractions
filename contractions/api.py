@@ -47,7 +47,7 @@ def load_json(filepath: str) -> None:
 
 def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
     if not isinstance(context_chars, int):
-        raise TypeError("Argument context_chars must be integer!")
+        raise TypeError("Argument context_chars must be an integer, got {type(context_chars).__name__}!")
 
     matched_contractions = _get_preview_matcher().findall(text)
     text_length = len(text)
