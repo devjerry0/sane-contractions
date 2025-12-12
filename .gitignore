@@ -21,3 +21,8 @@ coverage.xml
 htmlcov/
 .pytest_cache/
 *.egg-info/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+dmypy.json
+.hypothesis/
