@@ -3,18 +3,7 @@ from itertools import chain
 from textsearch import TextSearch
 
 from .loaders import load_all_contractions
-
-
-class _State:
-    contractions_dict: dict[str, str] | None = None
-    leftovers_dict: dict[str, str] | None = None
-    slang_dict: dict[str, str] | None = None
-
-    ts_leftovers: TextSearch | None = None
-    ts_leftovers_slang: TextSearch | None = None
-    ts_slang: TextSearch | None = None
-    ts_basic: TextSearch | None = None
-    ts_view_window: TextSearch | None = None
+from .state import _State
 
 
 def _load_dicts():
