@@ -8,6 +8,7 @@ from .core import (
     _get_preview_matcher,
     _get_slang_matcher,
 )
+from .validation import validate_dict_param, validate_int_param, validate_non_empty_string
 
 _ALL_MATCHERS = (
     _get_basic_matcher,
@@ -18,12 +19,16 @@ _ALL_MATCHERS = (
 
 
 def add(contraction: str, expansion: str) -> None:
+    validate_non_empty_string(contraction, "contraction")
+    validate_non_empty_string(expansion, "expansion")
+
     for get_matcher in _ALL_MATCHERS:
         get_matcher().add(contraction, expansion)
     _get_preview_matcher().add([contraction])
 
 
 def add_dict(contractions_dict: dict[str, str]) -> None:
+    validate_dict_param(contractions_dict, "contractions_dict")
     if not contractions_dict:
         return
 
@@ -46,8 +51,7 @@ def load_json(filepath: str) -> None:
 
 
 def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
-    if not isinstance(context_chars, int):
-        raise TypeError("Argument context_chars must be an integer, got {type(context_chars).__name__}!")
+    validate_int_param(context_chars, "context_chars")
 
     matched_contractions = _get_preview_matcher().findall(text)
     text_length = len(text)

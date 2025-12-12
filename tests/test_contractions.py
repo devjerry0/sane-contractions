@@ -170,3 +170,28 @@ def test_fix_basic_only():
     text = "I'm happy you're here"
     result = contractions.fix(text, leftovers=False, slang=False)
     assert result == "I am happy you are here"
+
+
+def test_fix_invalid_input():
+    with pytest.raises(TypeError, match="text must be a string"):
+        contractions.fix(None)
+    with pytest.raises(TypeError, match="text must be a string"):
+        contractions.fix(123)
+
+
+def test_add_invalid_input():
+    with pytest.raises(TypeError, match="contraction must be a string"):
+        contractions.add(123, "test")
+    with pytest.raises(TypeError, match="expansion must be a string"):
+        contractions.add("test", 456)
+    with pytest.raises(ValueError, match="contraction cannot be empty"):
+        contractions.add("", "test")
+    with pytest.raises(ValueError, match="expansion cannot be empty"):
+        contractions.add("test", "")
+
+
+def test_add_dict_invalid_input():
+    with pytest.raises(TypeError, match="contractions_dict must be a dict"):
+        contractions.add_dict("not a dict")
+    with pytest.raises(TypeError, match="contractions_dict must be a dict"):
+        contractions.add_dict(123)
