@@ -17,3 +17,7 @@ __pycache__/
 .tox/
 .cache
 .coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+*.egg-info/
