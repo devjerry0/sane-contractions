@@ -42,5 +42,6 @@ def _intersperse(items: list, separator) -> list:
 
     result = [separator] * total_slots
     result[0::2] = items
+
     return result
 
