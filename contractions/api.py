@@ -1,47 +1,28 @@
-import json
-
-from .core import replacers, ts_view_window
-
-
-def add(key, value):
-    for ts in replacers.values():
-        ts.add(key, value)
-    ts_view_window.add([key])
+from .extensions import add_custom_contraction, add_custom_dict, load_custom_from_file
+from .processor import expand as _expand
+from .processor import preview as _preview
 
 
-def add_dict(dictionary):
-    for ts in replacers.values():
-        ts.add(dictionary)
-    ts_view_window.add(list(dictionary.keys()))
+def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
+    return _expand(text, leftovers, slang)
 
 
-def load_json(filepath):
-    with open(filepath, encoding="utf-8") as f:
-        data = json.load(f)
-    add_dict(data)
+def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
+    return _preview(text, context_chars)
 
 
-def preview(text, flank):
-    """
-    Return all contractions and their location before fix for manual check. Also provide a viewing window to quickly
-    preview the contractions in the text.
-    :param text: texture.
-    :param flank: int number, control the size of the preview window. The window would be "flank-contraction-flank".
-    :return: preview_items, a list includes all matched contractions and their locations.
-    """
-    if not isinstance(flank, int):
-        raise TypeError("Argument flank must be integer!")
+def add(contraction: str, expansion: str) -> None:
+    return add_custom_contraction(contraction, expansion)
 
-    results = ts_view_window.findall(text)
-    text_len = len(text)
 
-    return [
-        {
-            "match": result.match,
-            "start": result.start,
-            "end": result.end,
-            "viewing_window": text[max(0, result.start - flank):min(text_len, result.end + flank)]
-        }
-        for result in results
-    ]
+def add_dict(contractions_dict: dict[str, str]) -> None:
+    return add_custom_dict(contractions_dict)
+
+
+def load_file(filepath: str) -> None:
+    return load_custom_from_file(filepath)
+
+
+e = expand
+p = preview
 
