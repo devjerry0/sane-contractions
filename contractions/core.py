@@ -1,13 +1,12 @@
-import json
-import pkgutil
-from itertools import chain, product
+from itertools import chain
 
 from textsearch import TextSearch
+
+from .loaders import load_all_contractions
 
 _contractions_dict: dict[str, str] | None = None
 _leftovers_dict: dict[str, str] | None = None
 _slang_dict: dict[str, str] | None = None
-_unsafe_dict: dict[str, str] | None = None
 
 _ts_leftovers: TextSearch | None = None
 _ts_leftovers_slang: TextSearch | None = None
@@ -16,67 +15,13 @@ _ts_basic: TextSearch | None = None
 _ts_view_window: TextSearch | None = None
 
 
-def _load_json_data(filename: str) -> dict | list:
-    json_bytes = pkgutil.get_data("contractions", f"data/{filename}")
-    assert json_bytes is not None
-    return json.loads(json_bytes.decode("utf-8"))
-
-
-def _normalize_apostrophes(contractions: dict[str, str]) -> dict[str, str]:
-    return {
-        contraction.replace("'", "'"): expansion
-        for contraction, expansion in contractions.items()
-    }
-
-
 def _load_dicts():
-    global _contractions_dict, _leftovers_dict, _slang_dict, _unsafe_dict  # noqa: PLW0603
+    global _contractions_dict, _leftovers_dict, _slang_dict  # noqa: PLW0603
 
     if _contractions_dict is not None:
         return
 
-    _contractions_dict = _load_json_data("contractions_dict.json")
-    _leftovers_dict = _load_json_data("leftovers_dict.json")
-    _slang_dict = _load_json_data("slang_dict.json")
-    safety_keys = frozenset(_load_json_data("safety_keys.json"))
-
-    _contractions_dict |= _normalize_apostrophes(_contractions_dict)
-    _leftovers_dict |= _normalize_apostrophes(_leftovers_dict)
-
-    _unsafe_dict = _build_apostrophe_variants(_contractions_dict, safety_keys)
-    _slang_dict.update(_unsafe_dict)
-
-
-def _build_apostrophe_variants(contractions: dict[str, str], safety_keys: frozenset[str]) -> dict[str, str]:
-    apostrophe_variants = ["", "'"]
-    variants_dict = {}
-
-    for contraction, expansion in contractions.items():
-        if "'" not in contraction:
-            continue
-
-        if contraction.lower() in safety_keys:
-            continue
-
-        tokens = contraction.split("'")
-        combinations = _get_combinations(tokens, apostrophe_variants)
-
-        for combination in combinations:
-            variants_dict[combination] = expansion
-
-    return variants_dict
-
-
-def _get_combinations(tokens, joiners):
-    token_options = [[token] for token in tokens]
-    interspersed_options = _intersperse(token_options, joiners)
-    return ["".join(combination) for combination in product(*interspersed_options)]
-
-
-def _intersperse(items, separator):
-    result = [separator] * (len(items) * 2 - 1)
-    result[0::2] = items
-    return result
+    _contractions_dict, _leftovers_dict, _slang_dict = load_all_contractions()
 
 
 def _get_ts_basic():
