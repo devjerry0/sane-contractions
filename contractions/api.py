@@ -1,74 +1,28 @@
-import json
-import os
-
-from .matchers import (
-    _get_basic_matcher,
-    _get_leftovers_matcher,
-    _get_leftovers_slang_matcher,
-    _get_preview_matcher,
-    _get_slang_matcher,
-)
-from .validation import validate_dict_param, validate_int_param, validate_non_empty_string
-
-_ALL_MATCHERS = (
-    _get_basic_matcher,
-    _get_leftovers_matcher,
-    _get_slang_matcher,
-    _get_leftovers_slang_matcher,
-)
+from .extensions import add_custom_contraction, add_custom_dict, load_custom_from_file
+from .processor import expand as _expand
+from .processor import preview as _preview
 
 
-def add(contraction: str, expansion: str) -> None:
-    validate_non_empty_string(contraction, "contraction")
-    validate_non_empty_string(expansion, "expansion")
-
-    for get_matcher in _ALL_MATCHERS:
-        get_matcher().add(contraction, expansion)
-    _get_preview_matcher().add([contraction])
-
-
-def add_dict(contractions_dict: dict[str, str]) -> None:
-    validate_dict_param(contractions_dict, "contractions_dict")
-    if not contractions_dict:
-        return
-
-    for get_matcher in _ALL_MATCHERS:
-        get_matcher().add(contractions_dict)
-    _get_preview_matcher().add(list(contractions_dict.keys()))
-
-
-def load_json(filepath: str) -> None:
-    if not os.path.exists(filepath):
-        raise FileNotFoundError(f"JSON file not found at: {filepath}")
-
-    with open(filepath, encoding="utf-8") as json_file:
-        contractions_data = json.load(json_file)
-
-    if not isinstance(contractions_data, dict):
-        raise ValueError(f"JSON file must contain a dictionary, got {type(contractions_data).__name__}")
-
-    add_dict(contractions_data)
-
-
-def _extract_viewing_window(text: str, match_start: int, match_end: int, context_chars: int) -> str:
-    text_length = len(text)
-    window_start = max(0, match_start - context_chars)
-    window_end = min(text_length, match_end + context_chars)
-    return text[window_start:window_end]
+def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
+    return _expand(text, leftovers, slang)
 
 
 def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
-    validate_int_param(context_chars, "context_chars")
+    return _preview(text, context_chars)
 
-    matched_contractions = _get_preview_matcher().findall(text)
 
-    return [
-        {
-            "match": match.match,
-            "start": match.start,
-            "end": match.end,
-            "viewing_window": _extract_viewing_window(text, match.start, match.end, context_chars)
-        }
-        for match in matched_contractions
-    ]
+def add(contraction: str, expansion: str) -> None:
+    return add_custom_contraction(contraction, expansion)
+
+
+def add_dict(contractions_dict: dict[str, str]) -> None:
+    return add_custom_dict(contractions_dict)
+
+
+def load_file(filepath: str) -> None:
+    return load_custom_from_file(filepath)
+
+
+e = expand
+p = preview
 
