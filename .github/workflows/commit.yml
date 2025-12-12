@@ -3,10 +3,13 @@ name: commit
 
 on:
   push:
+    branches: [dev, main]
+  pull_request:
+    branches: [main]
 
 jobs:
   lint:
-    name: Python Lint
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: checkout
