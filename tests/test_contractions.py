@@ -7,17 +7,17 @@ import pytest
 import contractions
 
 
-def test_fix():
-    assert contractions.fix("you're happy now") == "you are happy now"
+def test_expand():
+    assert contractions.expand("you're happy now") == "you are happy now"
 
 
 def test_insensitivity():
-    assert contractions.fix("You're happier now") == "You are happier now"
+    assert contractions.expand("You're happier now") == "You are happier now"
 
 
 def test_add():
     contractions.add('mychange', 'my change')
-    assert contractions.fix('mychange') == 'my change'
+    assert contractions.expand('mychange') == 'my change'
 
 
 def test_add_dict():
@@ -31,23 +31,23 @@ def test_add_dict():
     }
     contractions.add_dict(custom_dict)
 
-    assert contractions.fix('customone') == 'custom one'
-    assert contractions.fix('customtwo') == 'custom two'
-    assert contractions.fix('customthree') == 'custom three'
-    assert contractions.fix('customone and customtwo') == 'custom one and custom two'
+    assert contractions.expand('customone') == 'custom one'
+    assert contractions.expand('customtwo') == 'custom two'
+    assert contractions.expand('customthree') == 'custom three'
+    assert contractions.expand('customone and customtwo') == 'custom one and custom two'
 
-    assert contractions.fix('Customone') == 'Custom One'
+    assert contractions.expand('Customone') == 'Custom One'
 
-    assert contractions.fix("can't") == 'cannot'
-    assert contractions.fix("won't") == 'will not'
-    assert contractions.fix("shouldn't") == 'should not'
-    assert contractions.fix("Can't") == 'Cannot'
+    assert contractions.expand("can't") == 'cannot'
+    assert contractions.expand("won't") == 'will not'
+    assert contractions.expand("shouldn't") == 'should not'
+    assert contractions.expand("Can't") == 'Cannot'
 
 
 def test_ill():
     txt = 'He is to step down at the end of the week due to ill health'
-    assert contractions.fix(txt) == txt
-    assert contractions.fix("I'll") == "I will"
+    assert contractions.expand(txt) == txt
+    assert contractions.expand("I'll") == "I will"
 
 
 def test_preview():
@@ -75,23 +75,23 @@ def test_preview_invalid_context_chars():
 
 
 def test_empty_string():
-    assert contractions.fix("") == ""
+    assert contractions.expand("") == ""
 
 
 def test_no_contractions():
     text = "This is a simple sentence."
-    assert contractions.fix(text) == text
+    assert contractions.expand(text) == text
 
 
 def test_multiple_contractions():
-    result = contractions.fix("I'm sure you're going to love what we've done")
+    result = contractions.expand("I'm sure you're going to love what we've done")
     assert result == "I am sure you are going to love what we have done"
 
 
 def test_case_preservation():
-    assert contractions.fix("You're") == "You are"
-    assert contractions.fix("YOU'RE") == "YOU ARE"
-    assert contractions.fix("you're") == "you are"
+    assert contractions.expand("You're") == "You are"
+    assert contractions.expand("YOU'RE") == "YOU ARE"
+    assert contractions.expand("you're") == "you are"
 
 
 def test_add_dict_empty():
@@ -100,12 +100,12 @@ def test_add_dict_empty():
 
 def test_add_dict_overwrites():
     contractions.add_dict({"test123": "original"})
-    assert contractions.fix("test123") == "original"
+    assert contractions.expand("test123") == "original"
     contractions.add_dict({"test123": "updated"})
-    assert contractions.fix("test123") == "updated"
+    assert contractions.expand("test123") == "updated"
 
 
-def test_load_json():
+def test_load_file():
     test_data = {
         "jsontest1": "json test one",
         "jsontest2": "json test two",
@@ -117,66 +117,66 @@ def test_load_json():
         temp_path = f.name
 
     try:
-        contractions.load_json(temp_path)
-        assert contractions.fix("jsontest1") == "json test one"
-        assert contractions.fix("jsontest2") == "json test two"
-        assert contractions.fix("jsoncustom") == "json custom"
+        contractions.load_file(temp_path)
+        assert contractions.expand("jsontest1") == "json test one"
+        assert contractions.expand("jsontest2") == "json test two"
+        assert contractions.expand("jsoncustom") == "json custom"
     finally:
         os.unlink(temp_path)
 
 
-def test_load_json_file_not_found():
+def test_load_file_file_not_found():
     with pytest.raises(FileNotFoundError):
-        contractions.load_json("/nonexistent/path/to/file.json")
+        contractions.load_file("/nonexistent/path/to/file.json")
 
 
-def test_load_json_invalid_json():
+def test_load_file_invalid_json():
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
         f.write("{ invalid json }")
         temp_path = f.name
 
     try:
         with pytest.raises(json.JSONDecodeError):
-            contractions.load_json(temp_path)
+            contractions.load_file(temp_path)
     finally:
         os.unlink(temp_path)
 
 
-def test_load_json_non_dict():
+def test_load_file_non_dict():
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
         json.dump(["not", "a", "dict"], f)
         temp_path = f.name
 
     try:
-        with pytest.raises(ValueError, match="must contain a dictionary"):
-            contractions.load_json(temp_path)
+        with pytest.raises(ValueError, match="must contain a JSON dictionary"):
+            contractions.load_file(temp_path)
     finally:
         os.unlink(temp_path)
 
 
-def test_fix_leftovers_only():
+def test_expand_leftovers_only():
     text = "I'm happy you're here"
-    result = contractions.fix(text, leftovers=True, slang=False)
+    result = contractions.expand(text, leftovers=True, slang=False)
     assert result == "I am happy you are here"
 
 
-def test_fix_slang_only():
+def test_expand_slang_only():
     text = "I'm happy you're here"
-    result = contractions.fix(text, leftovers=False, slang=True)
+    result = contractions.expand(text, leftovers=False, slang=True)
     assert result == "I am happy you are here"
 
 
-def test_fix_basic_only():
+def test_expand_basic_only():
     text = "I'm happy you're here"
-    result = contractions.fix(text, leftovers=False, slang=False)
+    result = contractions.expand(text, leftovers=False, slang=False)
     assert result == "I am happy you are here"
 
 
-def test_fix_invalid_input():
+def test_expand_invalid_input():
     with pytest.raises(TypeError, match="text must be a string"):
-        contractions.fix(None)
+        contractions.expand(None)
     with pytest.raises(TypeError, match="text must be a string"):
-        contractions.fix(123)
+        contractions.expand(123)
 
 
 def test_add_invalid_input():
@@ -195,3 +195,16 @@ def test_add_dict_invalid_input():
         contractions.add_dict("not a dict")
     with pytest.raises(TypeError, match="contractions_dict must be a dict"):
         contractions.add_dict(123)
+
+
+def test_fix_deprecated_alias():
+    with pytest.warns(DeprecationWarning, match="fix\\(\\) is deprecated.*Use expand\\(\\) instead"):
+        result = contractions.fix("you're happy")
+    assert result == "you are happy"
+
+
+def test_shortcuts():
+    assert contractions.e("you're") == "you are"
+    preview_result = contractions.p("it's", 5)
+    assert len(preview_result) == 1
+    assert preview_result[0]["match"] == "it's"

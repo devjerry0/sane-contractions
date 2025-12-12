@@ -26,9 +26,9 @@ def time_function(func, iterations=1000):
     }
 
 
-def benchmark_basic_fix():
+def benchmark_basic_expand():
     text = "you're happy and I'm sad but we'll get through it"
-    contractions.fix(text)
+    contractions.expand(text)
 
 
 def benchmark_large_text():
@@ -40,22 +40,22 @@ def benchmark_large_text():
     Who's going to tell them what's happened? I'd volunteer but I'm too busy.
     We'll see what happens when they've had time to think about it.
     """ * 100
-    contractions.fix(text)
+    contractions.expand(text)
 
 
 def benchmark_no_contractions():
     text = "This is a simple sentence with no contractions at all." * 100
-    contractions.fix(text)
+    contractions.expand(text)
 
 
 def benchmark_with_slang():
     text = "gonna wanna shoulda coulda ain't" * 50
-    contractions.fix(text, slang=True)
+    contractions.expand(text, slang=True)
 
 
 def benchmark_without_slang():
     text = "gonna wanna shoulda coulda ain't" * 50
-    contractions.fix(text, slang=False)
+    contractions.expand(text, slang=False)
 
 
 def benchmark_preview_small():
@@ -93,7 +93,7 @@ def main():
     print("=" * 70)
 
     benchmarks = [
-        ("Basic Fix (short text)", benchmark_basic_fix, 1000),
+        ("Basic Expand (short text)", benchmark_basic_expand, 1000),
         ("Large Text Processing", benchmark_large_text, 100),
         ("No Contractions (negative case)", benchmark_no_contractions, 1000),
         ("With Slang Enabled", benchmark_with_slang, 1000),
