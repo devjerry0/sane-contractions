@@ -1,18 +1,20 @@
 import json
 
-from .core import replacers, ts_view_window
+from .core import _get_ts_basic, _get_ts_leftovers, _get_ts_leftovers_slang, _get_ts_slang, _get_ts_view_window
 
 
 def add(key, value):
-    for ts in replacers.values():
+    for getter in [_get_ts_basic, _get_ts_leftovers, _get_ts_slang, _get_ts_leftovers_slang]:
+        ts = getter()
         ts.add(key, value)
-    ts_view_window.add([key])
+    _get_ts_view_window().add([key])
 
 
 def add_dict(dictionary):
-    for ts in replacers.values():
+    for getter in [_get_ts_basic, _get_ts_leftovers, _get_ts_slang, _get_ts_leftovers_slang]:
+        ts = getter()
         ts.add(dictionary)
-    ts_view_window.add(list(dictionary.keys()))
+    _get_ts_view_window().add(list(dictionary.keys()))
 
 
 def load_json(filepath):
@@ -32,7 +34,7 @@ def preview(text, flank):
     if not isinstance(flank, int):
         raise TypeError("Argument flank must be integer!")
 
-    results = ts_view_window.findall(text)
+    results = _get_ts_view_window().findall(text)
     text_len = len(text)
 
     return [
