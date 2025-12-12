@@ -29,7 +29,7 @@ classifiers = [
     "Topic :: Text Processing :: Linguistic",
 ]
 dependencies = [
-    "textsearch>=0.0.21",
+    "textsearch>=0.0.24",
 ]
 
 [project.optional-dependencies]

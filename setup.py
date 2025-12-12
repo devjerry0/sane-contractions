@@ -52,5 +52,5 @@ setup(
     zip_safe=False,
     platforms="any",
     python_requires=">=3.10",
-    install_requires=["textsearch>=0.0.21"],
+    install_requires=["textsearch>=0.0.24"],
 )
