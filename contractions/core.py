@@ -16,36 +16,32 @@ _ts_basic: TextSearch | None = None
 _ts_view_window: TextSearch | None = None
 
 
+def _load_json_data(filename: str) -> dict | list:
+    json_bytes = pkgutil.get_data("contractions", f"data/{filename}")
+    assert json_bytes is not None
+    return json.loads(json_bytes.decode("utf-8"))
+
+
+def _normalize_apostrophes(contractions: dict[str, str]) -> dict[str, str]:
+    return {
+        contraction.replace("'", "'"): expansion
+        for contraction, expansion in contractions.items()
+    }
+
+
 def _load_dicts():
     global _contractions_dict, _leftovers_dict, _slang_dict, _unsafe_dict  # noqa: PLW0603
 
     if _contractions_dict is not None:
         return
 
-    json_data = pkgutil.get_data("contractions", "data/contractions_dict.json")
-    assert json_data is not None
-    _contractions_dict = json.loads(json_data.decode("utf-8"))
+    _contractions_dict = _load_json_data("contractions_dict.json")
+    _leftovers_dict = _load_json_data("leftovers_dict.json")
+    _slang_dict = _load_json_data("slang_dict.json")
+    safety_keys = frozenset(_load_json_data("safety_keys.json"))
 
-    json_data = pkgutil.get_data("contractions", "data/leftovers_dict.json")
-    assert json_data is not None
-    _leftovers_dict = json.loads(json_data.decode("utf-8"))
-
-    json_data = pkgutil.get_data("contractions", "data/slang_dict.json")
-    assert json_data is not None
-    _slang_dict = json.loads(json_data.decode("utf-8"))
-
-    json_data = pkgutil.get_data("contractions", "data/safety_keys.json")
-    assert json_data is not None
-    safety_keys = frozenset(json.loads(json_data.decode("utf-8")))
-
-    _contractions_dict |= {
-        contraction.replace("'", "'"): expansion
-        for contraction, expansion in _contractions_dict.items()
-    }
-    _leftovers_dict |= {
-        contraction.replace("'", "'"): expansion
-        for contraction, expansion in _leftovers_dict.items()
-    }
+    _contractions_dict |= _normalize_apostrophes(_contractions_dict)
+    _leftovers_dict |= _normalize_apostrophes(_leftovers_dict)
 
     _unsafe_dict = _build_apostrophe_variants(_contractions_dict, safety_keys)
     _slang_dict.update(_unsafe_dict)
