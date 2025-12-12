@@ -23,3 +23,8 @@ def validate_data_type(data, expected_type: type, source: str) -> None:
     if not isinstance(data, expected_type):
         raise TypeError(f"Expected {expected_type.__name__} in {source}, got {type(data).__name__}")
 
+
+def validate_file_contains_dict(data, filepath: str) -> None:
+    if not isinstance(data, dict):
+        raise ValueError(f"File must contain a JSON dictionary, got {type(data).__name__}")
+
