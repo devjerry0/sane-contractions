@@ -34,6 +34,10 @@ def _load_dicts():
     assert json_data is not None
     _slang_dict = json.loads(json_data.decode("utf-8"))
 
+    json_data = pkgutil.get_data("contractions", "data/safety_keys.json")
+    assert json_data is not None
+    safety_keys = frozenset(json.loads(json_data.decode("utf-8")))
+
     _contractions_dict |= {
         contraction.replace("'", "'"): expansion
         for contraction, expansion in _contractions_dict.items()
@@ -42,10 +46,6 @@ def _load_dicts():
         contraction.replace("'", "'"): expansion
         for contraction, expansion in _leftovers_dict.items()
     }
-
-    safety_keys = frozenset(
-        ("he's", "he'll", "we'll", "we'd", "it's", "i'd", "we'd", "we're", "i'll", "who're", "o'")
-    )
 
     _unsafe_dict = {
         combination: expansion
