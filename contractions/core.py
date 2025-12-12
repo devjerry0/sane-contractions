@@ -34,38 +34,46 @@ def _load_dicts():
     assert json_data is not None
     _slang_dict = json.loads(json_data.decode("utf-8"))
 
-    for month in [
+    months = [
         "january", "february", "march", "april", "june", "july",
         "august", "september", "october", "november", "december",
-    ]:
-        _contractions_dict[month[:3] + "."] = month
+    ]
+    for month_name in months:
+        abbreviation = month_name[:3] + "."
+        _contractions_dict[abbreviation] = month_name
 
-    _contractions_dict |= {k.replace("'", "'"): v for k, v in _contractions_dict.items()}
-    _leftovers_dict |= {k.replace("'", "'"): v for k, v in _leftovers_dict.items()}
+    _contractions_dict |= {
+        contraction.replace("'", "'"): expansion
+        for contraction, expansion in _contractions_dict.items()
+    }
+    _leftovers_dict |= {
+        contraction.replace("'", "'"): expansion
+        for contraction, expansion in _leftovers_dict.items()
+    }
 
     safety_keys = frozenset(
         ("he's", "he'll", "we'll", "we'd", "it's", "i'd", "we'd", "we're", "i'll", "who're", "o'")
     )
 
     _unsafe_dict = {
-        comb: v
-        for k, v in _contractions_dict.items()
-        if k.lower() not in safety_keys and "'" in k
-        for comb in _get_combinations(k.split("'"), ["", "'"])
+        combination: expansion
+        for contraction, expansion in _contractions_dict.items()
+        if contraction.lower() not in safety_keys and "'" in contraction
+        for combination in _get_combinations(contraction.split("'"), ["", "'"])
     }
 
     _slang_dict.update(_unsafe_dict)
 
 
 def _get_combinations(tokens, joiners):
-    option = [[x] for x in tokens]
-    option = _intersperse(option, joiners)
-    return ["".join(c) for c in product(*option)]
+    token_options = [[token] for token in tokens]
+    interspersed_options = _intersperse(token_options, joiners)
+    return ["".join(combination) for combination in product(*interspersed_options)]
 
 
-def _intersperse(lst, item):
-    result = [item] * (len(lst) * 2 - 1)
-    result[0::2] = lst
+def _intersperse(items, separator):
+    result = [separator] * (len(items) * 2 - 1)
+    result[0::2] = items
     return result
 
 
@@ -114,20 +122,24 @@ def _get_ts_view_window():
     if _ts_view_window is None:
         _load_dicts()
         _ts_view_window = TextSearch("insensitive", "object")
-        all_keys = list(chain(_contractions_dict.keys(), _leftovers_dict.keys(), _slang_dict.keys()))
-        _ts_view_window.add(all_keys)
+        all_contraction_keys = list(chain(
+            _contractions_dict.keys(),
+            _leftovers_dict.keys(),
+            _slang_dict.keys()
+        ))
+        _ts_view_window.add(all_contraction_keys)
     return _ts_view_window
 
 
-def fix(s: str, leftovers: bool = True, slang: bool = True) -> str:
+def fix(text: str, leftovers: bool = True, slang: bool = True) -> str:
     if leftovers and slang:
-        return _get_ts_leftovers_slang().replace(s)
+        return _get_ts_leftovers_slang().replace(text)
 
     if leftovers:
-        return _get_ts_leftovers().replace(s)
+        return _get_ts_leftovers().replace(text)
 
     if slang:
-        return _get_ts_slang().replace(s)
+        return _get_ts_slang().replace(text)
 
-    return _get_ts_basic().replace(s)
+    return _get_ts_basic().replace(text)
 
