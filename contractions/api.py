@@ -14,7 +14,7 @@ def add_dict(dictionary):
     for getter in [_get_ts_basic, _get_ts_leftovers, _get_ts_slang, _get_ts_leftovers_slang]:
         ts = getter()
         ts.add(dictionary)
-    _get_ts_view_window().add(list(dictionary.keys()))
+    _get_ts_view_window().add(list(dictionary))
 
 
 def load_json(filepath):

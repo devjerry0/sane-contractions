@@ -1,6 +1,6 @@
 import json
 import pkgutil
-from itertools import product
+from itertools import chain, product
 
 from textsearch import TextSearch
 
@@ -47,12 +47,12 @@ def _load_dicts():
         ("he's", "he'll", "we'll", "we'd", "it's", "i'd", "we'd", "we're", "i'll", "who're", "o'")
     )
 
-    _unsafe_dict = {}
-    for k, v in _contractions_dict.items():
-        k_lower = k.lower()
-        if k_lower not in safety_keys and "'" in k:
-            for comb in _get_combinations(k.split("'"), ["", "'"]):
-                _unsafe_dict[comb] = v
+    _unsafe_dict = {
+        comb: v
+        for k, v in _contractions_dict.items()
+        if k.lower() not in safety_keys and "'" in k
+        for comb in _get_combinations(k.split("'"), ["", "'"])
+    }
 
     _slang_dict.update(_unsafe_dict)
 
@@ -114,7 +114,8 @@ def _get_ts_view_window():
     if _ts_view_window is None:
         _load_dicts()
         _ts_view_window = TextSearch("insensitive", "object")
-        _ts_view_window.add([*_contractions_dict.keys(), *_leftovers_dict.keys(), *_slang_dict.keys()])
+        all_keys = list(chain(_contractions_dict.keys(), _leftovers_dict.keys(), _slang_dict.keys()))
+        _ts_view_window.add(all_keys)
     return _ts_view_window
 
 
