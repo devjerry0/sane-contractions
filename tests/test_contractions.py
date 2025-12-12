@@ -1,4 +1,8 @@
 import json
+import os
+import tempfile
+
+import pytest
 
 import contractions
 
@@ -63,7 +67,6 @@ def test_preview():
 
 
 def test_preview_invalid_flank():
-    import pytest
     text = "I'd like this"
     with pytest.raises(TypeError):
         contractions.preview(text, flank="ten")
@@ -103,9 +106,6 @@ def test_add_dict_overwrites():
 
 
 def test_load_json():
-    import os
-    import tempfile
-
     test_data = {
         "jsontest1": "json test one",
         "jsontest2": "json test two",
@@ -126,17 +126,11 @@ def test_load_json():
 
 
 def test_load_json_file_not_found():
-    import pytest
     with pytest.raises(FileNotFoundError):
         contractions.load_json("/nonexistent/path/to/file.json")
 
 
 def test_load_json_invalid_json():
-    import os
-    import tempfile
-
-    import pytest
-
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
         f.write("{ invalid json }")
         temp_path = f.name
