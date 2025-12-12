@@ -10,6 +10,10 @@ on:
         required: true
         default: 'no'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   test:
     name: Run Tests Before Publishing
