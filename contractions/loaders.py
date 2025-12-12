@@ -43,7 +43,11 @@ def get_combinations(tokens, joiners):
 
 
 def intersperse(items, separator):
-    result = [separator] * (len(items) * 2 - 1)
+    num_items = len(items)
+    num_separators = num_items - 1
+    total_slots = num_items + num_separators
+
+    result = [separator] * total_slots
     result[0::2] = items
     return result
 
