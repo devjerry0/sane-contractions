@@ -14,7 +14,7 @@ def load_dict_data(filename: str) -> dict[str, str]:
     data = json.loads(json_bytes.decode("utf-8"))
     validate_data_type(data, dict, filename)
 
-    return cast(dict[str, str], data)
+    return cast("dict[str, str]", data)
 
 
 def load_list_data(filename: str) -> list[str]:
@@ -25,5 +25,5 @@ def load_list_data(filename: str) -> list[str]:
     data = json.loads(json_bytes.decode("utf-8"))
     validate_data_type(data, list, filename)
 
-    return cast(list[str], data)
+    return cast("list[str]", data)
 

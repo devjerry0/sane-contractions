@@ -54,6 +54,6 @@ def test_validate_data_type_valid_list() -> None:
 
 
 def test_validate_data_type_invalid() -> None:
-    with pytest.raises(TypeError, match="Expected dict in source.json, got list"):
+    with pytest.raises(TypeError, match=r"Expected dict in source\.json, got list"):
         validate_data_type([1, 2, 3], dict, "source.json")
 
