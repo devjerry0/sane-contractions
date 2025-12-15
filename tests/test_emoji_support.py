@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import sys
-from unittest.mock import MagicMock
-
 import pytest
 
 from contractions.emoji_support import EMOJI_AVAILABLE, replace_emojis_with_text
@@ -51,3 +48,21 @@ def test_emoji_integration_with_library() -> None:
     result = contractions.expand("hello 🔥 world", emojis=True)
     assert "🔥" not in result
     assert "fire" in result.lower() or "awesome" in result.lower()
+
+
+def test_ascii_only_text() -> None:
+    if not EMOJI_AVAILABLE:
+        pytest.skip("Emoji library not installed")
+    
+    text = "hello world this is ascii only"
+    result = replace_emojis_with_text(text)
+    assert result == text
+
+
+def test_unicode_but_no_emojis() -> None:
+    if not EMOJI_AVAILABLE:
+        pytest.skip("Emoji library not installed")
+    
+    text = "café résumé naïve"
+    result = replace_emojis_with_text(text)
+    assert result == text
