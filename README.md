@@ -5,9 +5,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A fast and comprehensive Python library for expanding English contractions and slang.
-
-**This is an enhanced fork of the original [contractions](https://github.com/kootenpv/contractions) library by Pascal van Kooten, with significant improvements in performance, testing, type safety, and maintainability.**
+A fast and comprehensive Python library for expanding English contractions.
 
 ## Features
 
@@ -188,6 +186,14 @@ Preview contractions in text before expanding.
 
 **Returns:** `list[dict]` - List of matches with context information
 
+### `e(text, leftovers=True, slang=True)`
+
+Shorthand alias for `expand()`.
+
+### `p(text, context_chars)`
+
+Shorthand alias for `preview()`.
+
 ## Examples
 
 ### Standard Contractions
@@ -317,6 +323,8 @@ This fork includes several enhancements over the original `contractions` library
 - Clear contributing guidelines
 
 ## Why "sane-contractions"?
+
+**This is an enhanced fork of the original [contractions](https://github.com/kootenpv/contractions) library by Pascal van Kooten, with improvements in performance, testing, type safety, and maintainability.**
 
 The original library is excellent but has been unmaintained since 2021. This fork provides:
 - Active maintenance

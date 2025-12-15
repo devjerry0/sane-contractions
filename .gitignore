@@ -26,3 +26,5 @@ htmlcov/
 .dmypy.json
 dmypy.json
 .hypothesis/
+.idea/
+uv.lock
