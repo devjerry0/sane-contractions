@@ -297,7 +297,7 @@ This fork includes several enhancements over the original `contractions` library
 - Eliminated redundant code paths
 - Reduced function call overhead
 
-### 🧪 Enhanced Testing
+### 🧪 Testing
 - **100% test coverage** enforced via CI/CD
 - Comprehensive tests including edge cases
 - Input validation and error handling tests
