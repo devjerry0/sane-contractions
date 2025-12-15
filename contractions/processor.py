@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .matcher import (
     _get_basic_matcher,
     _get_leftovers_matcher,

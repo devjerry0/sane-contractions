@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .file_loader import load_dict_from_file, load_dict_from_folder
 from .matcher import (
     _get_basic_matcher,
@@ -31,8 +33,7 @@ def add_custom_dict(contractions_dict: dict[str, str]) -> None:
 
 
 def load_custom_from_file(filepath: str) -> None:
-    contractions_data = load_dict_from_file(filepath)
-    add_custom_dict(contractions_data)
+    add_custom_dict(load_dict_from_file(filepath))
 
 
 def load_custom_from_folder(folderpath: str) -> None:
