@@ -1,4 +1,4 @@
-from .matchers import (
+from .matcher import (
     _get_basic_matcher,
     _get_leftovers_matcher,
     _get_leftovers_slang_matcher,
