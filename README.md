@@ -11,7 +11,7 @@ A fast and comprehensive Python library for expanding English contractions and s
 
 ## Features
 
-- ⚡ **Fast**: 50x faster than version 0.0.18 (uses efficient Aho-Corasick algorithm)
+- ⚡ **Fast**: ~112K ops/sec for typical text expansion (Aho-Corasick algorithm)
 - 📚 **Comprehensive**: Handles standard contractions, slang, and custom additions
 - 🎯 **Smart**: Preserves case and handles ambiguous contractions intelligently
 - 🔧 **Flexible**: Easy to add custom contractions on the fly
@@ -126,7 +126,7 @@ The `preview()` function lets you see all contractions in a text before expandin
 
 ```python
 text = "I'd love to see what you're thinking"
-preview = contractions.preview(text, flank=10)
+preview = contractions.preview(text, context_chars=10)
 
 for item in preview:
     print(f"Found '{item['match']}' at position {item['start']}")
@@ -178,7 +178,7 @@ Loads custom contractions from a JSON file.
 - `FileNotFoundError`: If the file doesn't exist
 - `json.JSONDecodeError`: If the file contains invalid JSON
 
-### `preview(text, flank)`
+### `preview(text, context_chars)`
 
 Preview contractions in text before expanding.
 
@@ -230,16 +230,22 @@ he's -> he is  (not "he has")
 
 The library uses the Aho-Corasick algorithm for efficient string matching, achieving:
 
-- **~256K ops/sec** for short texts
+- **~112K ops/sec** for typical text expansion (short texts with contractions)
+- **~251K ops/sec** for preview operations (contraction detection)
 - **~17K ops/sec** for medium texts with no contractions  
 - **~13K ops/sec** for slang-heavy texts
+- **~278K ops/sec** for adding custom contractions
 
-Run performance benchmarks:
+Benchmarked on Apple M3 Max, Python 3.13.
+
+Run performance benchmarks yourself:
 
 ```bash
-# Make sure package is installed in development mode
-pip install -e .
+# Create virtual environment and install
+uv venv && source .venv/bin/activate
+uv pip install -e .
 
+# Run benchmarks
 python tests/test_performance.py
 ```
 
@@ -255,19 +261,15 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Development Setup
 
 ```bash
-git clone https://github.com/kootenpv/contractions
-cd contractions
-pip install -e .
-pip install pytest pytest-cov ruff mypy
+git clone https://github.com/devjerry0/sane-contractions
+cd sane-contractions
+uv venv && source .venv/bin/activate
+uv pip install -e ".[dev]"
 ```
 
 ### Running Tests
 
 ```bash
-# Run tests
-pytest tests/ -v
-
-# Run tests with coverage
 pytest tests/ --cov=contractions --cov-report=term-missing
 ```
 
@@ -275,7 +277,7 @@ pytest tests/ --cov=contractions --cov-report=term-missing
 
 ```bash
 ruff check .
-mypy contractions/__init__.py tests/
+mypy contractions/ tests/
 ```
 
 ## What's Different from the Original?
@@ -286,32 +288,33 @@ This fork includes several enhancements over the original `contractions` library
 - **`add_dict()`** - Bulk add custom contractions from a dictionary
 - **`load_file()`** - Load contractions from JSON files
 - **Type hints** - Full type coverage with mypy validation
-- **Better structure** - Modular code organization (core, api modules)
+- **Better structure** - Modular code organization with single-responsibility modules
+- **Facade API** - Clean, simple public API with shorthand aliases (`e()`, `p()`)
 
 ### 🚀 Performance Improvements
-- Optimized dictionary operations using `|=` operator
+- Lazy-loaded TextSearch instances (30x faster imports)
+- Optimized dictionary operations and comprehensions
+- Eliminated redundant code paths
 - Reduced function call overhead
-- Improved list comprehensions
-- Cached computations
 
 ### 🧪 Enhanced Testing
-- **100% test coverage** (up from ~60%)
-- 16 comprehensive tests including edge cases
-- Error handling tests
+- **100% test coverage** enforced via CI/CD
+- Comprehensive tests including edge cases
+- Input validation and error handling tests
 - Performance benchmarking suite
 
 ### 📦 Modern Tooling
-- **Python 3.10+** support (modern type hints)
-- Ruff for fast linting
-- Pre-commit hooks
-- GitHub Actions CI/CD
-- Automated PyPI publishing
+- **Python 3.10+** support (modern type hints with `list[dict]`, etc.)
+- Ruff for fast linting (replaces black, flake8, isort)
+- Mypy for strict type checking
+- GitHub Actions CI/CD with concurrency control
+- Automated PyPI publishing via Git tags
+- `uv` support for fast dependency management
 
 ### 📚 Better Documentation
-- Comprehensive README with examples
-- API reference documentation
-- Deployment guide
-- Contributing guidelines
+- Comprehensive README with real benchmark results
+- Complete API reference with examples
+- Clear contributing guidelines
 
 ## Why "sane-contractions"?
 
