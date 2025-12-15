@@ -56,8 +56,11 @@ def load_custom_from_folder(folderpath: str) -> None:
     if not json_files:
         raise ValueError(f"No JSON files found in folder: {folderpath}")
     
+    merged_contractions: dict[str, str] = {}
     for json_file in json_files:
         contractions_data = json.loads(json_file.read_text(encoding="utf-8"))
         validate_file_contains_dict(contractions_data, str(json_file))
-        add_custom_dict(contractions_data)
+        merged_contractions.update(contractions_data)
+    
+    add_custom_dict(merged_contractions)
 
