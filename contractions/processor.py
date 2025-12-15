@@ -14,19 +14,24 @@ from .validation import validate_int_param, validate_string_param
 def expand(text: str, leftovers: bool = True, slang: bool = True, emojis: bool = False) -> str:
     validate_string_param(text, "text")
 
-    if emojis and EMOJI_AVAILABLE:  # pragma: no cover
-        text = replace_emojis_with_text(text)
-
+    result = text
+    
     if leftovers and slang:
-        return _get_leftovers_slang_matcher().replace(text)
+        result = _get_leftovers_slang_matcher().replace(result)
+    
+    if leftovers and not slang:
+        result = _get_leftovers_matcher().replace(result)
+    
+    if slang and not leftovers:
+        result = _get_slang_matcher().replace(result)
+    
+    if not leftovers and not slang:
+        result = _get_basic_matcher().replace(result)
 
-    if leftovers:
-        return _get_leftovers_matcher().replace(text)
+    if emojis and EMOJI_AVAILABLE:  # pragma: no cover
+        result = replace_emojis_with_text(result)
 
-    if slang:
-        return _get_slang_matcher().replace(text)
-
-    return _get_basic_matcher().replace(text)
+    return result
 
 def _extract_viewing_window(text: str, match_start: int, match_end: int, context_chars: int) -> str:
     text_length = len(text)
