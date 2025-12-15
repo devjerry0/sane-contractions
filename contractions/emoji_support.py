@@ -21,14 +21,26 @@ def _convert_shortcode_to_text(shortcode: str) -> str:
     return shortcode.strip(":").replace("_", " ").replace("-", " ")
 
 
-def _build_replacement_text(emoji_char: str) -> str:
+def _emoji_to_text(emoji_char: str) -> str:
     shortcode = emoji.demojize(emoji_char)
     text_version = _convert_shortcode_to_text(shortcode)
     return f" {text_version} "
 
 
-def _replace_emoji_at_position(text: str, start: int, end: int, replacement: str) -> str:
-    return text[:start] + replacement + text[end:]
+def _build_result_segments(text: str, emoji_data: list[dict[str, Any]]) -> list[str]:
+    segments = []
+    cursor = 0
+    
+    for item in emoji_data:
+        start = item["match_start"]
+        end = item["match_end"]
+        
+        segments.append(text[cursor:start])
+        segments.append(_emoji_to_text(item["emoji"]))
+        cursor = end
+    
+    segments.append(text[cursor:])
+    return segments
 
 
 def replace_emojis_with_text(text: str) -> str:
@@ -43,17 +55,4 @@ def replace_emojis_with_text(text: str) -> str:
     if not emoji_data:
         return text
     
-    result = text
-    offset = 0
-    
-    for item in emoji_data:
-        emoji_char = item["emoji"]
-        start = item["match_start"] + offset
-        end = item["match_end"] + offset
-        
-        replacement = _build_replacement_text(emoji_char)
-        result = _replace_emoji_at_position(result, start, end, replacement)
-        
-        offset += len(replacement) - (end - start)
-    
-    return result
+    return "".join(_build_result_segments(text, emoji_data))
