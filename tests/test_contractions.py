@@ -62,14 +62,17 @@ def test_preview() -> None:
     end0 = preview_items[0]["end"]
     start1 = preview_items[1]["start"]
     end1 = preview_items[1]["end"]
-    assert isinstance(start0, int) and isinstance(end0, int)
-    assert isinstance(start1, int) and isinstance(end1, int)
+    assert isinstance(start0, int)
+    assert isinstance(end0, int)
+    assert isinstance(start1, int)
+    assert isinstance(end1, int)
     assert text[start0:end0] == "This's"
     assert text[start1:end1] == "I'd"
     
     viewing_window0 = preview_items[0]["viewing_window"]
     viewing_window1 = preview_items[1]["viewing_window"]
-    assert isinstance(viewing_window0, str) and isinstance(viewing_window1, str)
+    assert isinstance(viewing_window0, str)
+    assert isinstance(viewing_window1, str)
     assert "This's" in viewing_window0
     assert "I'd" in viewing_window1
     
