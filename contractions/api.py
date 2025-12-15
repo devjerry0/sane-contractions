@@ -5,8 +5,8 @@ from .processor import expand as _expand
 from .processor import preview as _preview
 
 
-def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
-    return _expand(text, leftovers, slang)
+def expand(text: str, leftovers: bool = True, slang: bool = True, emojis: bool = False) -> str:
+    return _expand(text, leftovers, slang, emojis)
 
 
 def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:

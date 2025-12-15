@@ -59,6 +59,9 @@ dev = [
     "build>=1.0",
     "twine>=4.0",
 ]
+emoji = [
+    "emoji>=2.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/devjerry0/sane-contractions"

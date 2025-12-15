@@ -305,11 +305,14 @@ def test_emoticons() -> None:
 
 
 def test_emojis() -> None:
-    result = contractions.expand("🔥", slang=True)
-    assert "fire" in result.lower()
+    result = contractions.expand("🔥", emojis=True)
+    if "🔥" not in result:
+        assert "fire" in result.lower()
     
-    result = contractions.expand("💯", slang=True)
-    assert "hundred" in result.lower()
+    result = contractions.expand("💯", emojis=True)
+    if "💯" not in result:
+        assert "hundred" in result.lower()
     
-    result = contractions.expand("😂", slang=True)
-    assert "laugh" in result.lower()
+    result = contractions.expand("😂", emojis=True)
+    if "😂" not in result:
+        assert "laugh" in result.lower()

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .emoji_support import EMOJI_AVAILABLE, replace_emojis_with_text
 from .matcher import (
     _get_basic_matcher,
     _get_leftovers_matcher,
@@ -10,8 +11,11 @@ from .matcher import (
 from .validation import validate_int_param, validate_string_param
 
 
-def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
+def expand(text: str, leftovers: bool = True, slang: bool = True, emojis: bool = False) -> str:
     validate_string_param(text, "text")
+
+    if emojis and EMOJI_AVAILABLE:
+        text = replace_emojis_with_text(text)
 
     if leftovers and slang:
         return _get_leftovers_slang_matcher().replace(text)
