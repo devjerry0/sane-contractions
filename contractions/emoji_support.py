@@ -14,9 +14,24 @@ def replace_emojis_with_text(text: str) -> str:
     if not any(ord(c) > 127 for c in text):
         return text
     
-    def emoji_to_text(chars: str, data_dict: dict) -> str:  # pragma: no cover
-        shortcode = data_dict["en"]
-        text_version = shortcode.strip(":").replace("_", " ").replace("-", " ")
-        return f" {text_version} "
+    emoji_data = emoji.emoji_list(text)  # type: ignore[attr-defined] # pragma: no cover
     
-    return emoji.replace_emoji(text, replace=emoji_to_text)  # type: ignore[no-any-return] # pragma: no cover
+    if not emoji_data:
+        return text
+    
+    result = text
+    offset = 0
+    
+    for item in emoji_data:  # pragma: no cover
+        emoji_char = item["emoji"]
+        start = item["match_start"] + offset
+        end = item["match_end"] + offset
+        
+        shortcode = emoji.demojize(emoji_char)  # type: ignore[attr-defined]
+        text_version = shortcode.strip(":").replace("_", " ").replace("-", " ")
+        replacement = f" {text_version} "
+        
+        result = result[:start] + replacement + result[end:]
+        offset += len(replacement) - (end - start)
+    
+    return result
