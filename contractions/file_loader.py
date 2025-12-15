@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import pkgutil
 
@@ -15,7 +17,7 @@ def load_dict_data(filename: str) -> dict[str, str]:
     data = json.loads(json_bytes.decode("utf-8"))
     validate_data_type(data, dict, filename)
 
-    return cast("dict[str, str]", data)
+    return cast(dict[str, str], data)
 
 
 def load_list_data(filename: str) -> list[str]:
@@ -26,7 +28,7 @@ def load_list_data(filename: str) -> list[str]:
     data = json.loads(json_bytes.decode("utf-8"))
     validate_data_type(data, list, filename)
 
-    return cast("list[str]", data)
+    return cast(list[str], data)
 
 
 def load_dict_from_file(filepath: str) -> dict[str, str]:
@@ -36,7 +38,7 @@ def load_dict_from_file(filepath: str) -> dict[str, str]:
 
     contractions_data = json.loads(path.read_text(encoding="utf-8"))
     validate_file_contains_dict(contractions_data, filepath)
-    return cast("dict[str, str]", contractions_data)
+    return cast(dict[str, str], contractions_data)
 
 
 def load_dict_from_folder(folderpath: str) -> dict[str, str]:

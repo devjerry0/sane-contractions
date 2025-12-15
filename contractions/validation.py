@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 def validate_string_param(value: object, param_name: str) -> None:
     if not isinstance(value, str):
         raise TypeError(f"{param_name} must be a string, got {type(value).__name__}")

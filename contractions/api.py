@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .extension import add_custom_contraction, add_custom_dict, load_custom_from_file, load_custom_from_folder
 from .processor import expand as _expand
 from .processor import preview as _preview

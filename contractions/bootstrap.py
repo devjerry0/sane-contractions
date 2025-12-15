@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .file_loader import load_dict_data, load_list_data
 from .transformer import build_apostrophe_variants, normalize_apostrophes
 

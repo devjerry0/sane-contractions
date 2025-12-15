@@ -155,6 +155,7 @@ ignore = [
     "PLR0913",
     "PLR2004",
     "PLR6104",
+    "TC006",
 ]
 
 [tool.ruff.lint.mccabe]
