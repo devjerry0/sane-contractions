@@ -1,4 +1,4 @@
-from .extensions import add_custom_contraction, add_custom_dict, load_custom_from_file
+from .extension import add_custom_contraction, add_custom_dict, load_custom_from_file
 from .processor import expand as _expand
 from .processor import preview as _preview
 
