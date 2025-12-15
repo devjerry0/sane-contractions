@@ -42,3 +42,22 @@ def load_custom_from_file(filepath: str) -> None:
     validate_file_contains_dict(contractions_data, filepath)
     add_custom_dict(contractions_data)
 
+
+def load_custom_from_folder(folderpath: str) -> None:
+    folder = Path(folderpath)
+    if not folder.exists():
+        raise FileNotFoundError(f"Folder not found at: {folderpath}")
+    
+    if not folder.is_dir():
+        raise NotADirectoryError(f"Path is not a directory: {folderpath}")
+    
+    json_files = sorted(folder.glob("*.json"))
+    
+    if not json_files:
+        raise ValueError(f"No JSON files found in folder: {folderpath}")
+    
+    for json_file in json_files:
+        contractions_data = json.loads(json_file.read_text(encoding="utf-8"))
+        validate_file_contains_dict(contractions_data, str(json_file))
+        add_custom_dict(contractions_data)
+
