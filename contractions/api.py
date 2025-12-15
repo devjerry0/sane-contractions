@@ -1,4 +1,4 @@
-from .extension import add_custom_contraction, add_custom_dict, load_custom_from_file
+from .extension import add_custom_contraction, add_custom_dict, load_custom_from_file, load_custom_from_folder
 from .processor import expand as _expand
 from .processor import preview as _preview
 
@@ -21,6 +21,10 @@ def add_dict(contractions_dict: dict[str, str]) -> None:
 
 def load_file(filepath: str) -> None:
     return load_custom_from_file(filepath)
+
+
+def load_folder(folderpath: str) -> None:
+    return load_custom_from_folder(folderpath)
 
 
 e = expand

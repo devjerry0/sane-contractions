@@ -1,7 +1,7 @@
 import warnings
 
 from ._version import __version__
-from .api import add, add_dict, e, expand, load_file, p, preview
+from .api import add, add_dict, e, expand, load_file, load_folder, p, preview
 
 
 def fix(*args: object, **kwargs: object) -> str:
@@ -13,4 +13,4 @@ def fix(*args: object, **kwargs: object) -> str:
     return expand(*args, **kwargs)  # type: ignore[arg-type]
 
 
-__all__ = ["__version__", "add", "add_dict", "e", "expand", "fix", "load_file", "p", "preview"]
+__all__ = ["__version__", "add", "add_dict", "e", "expand", "fix", "load_file", "load_folder", "p", "preview"]

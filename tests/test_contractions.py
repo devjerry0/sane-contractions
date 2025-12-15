@@ -169,6 +169,66 @@ def test_load_file_non_dict() -> None:
         os.unlink(temp_path)
 
 
+def test_load_folder() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        file1 = os.path.join(temp_dir, "dict1.json")
+        file2 = os.path.join(temp_dir, "dict2.json")
+        
+        with open(file1, "w", encoding="utf-8") as f:
+            json.dump({"foldertest1": "folder test one", "foldertest2": "folder test two"}, f)
+        
+        with open(file2, "w", encoding="utf-8") as f:
+            json.dump({"foldertest3": "folder test three"}, f)
+        
+        contractions.load_folder(temp_dir)
+        
+        assert contractions.expand("foldertest1") == "folder test one"
+        assert contractions.expand("foldertest2") == "folder test two"
+        assert contractions.expand("foldertest3") == "folder test three"
+
+
+def test_load_folder_ignores_non_json() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        json_file = os.path.join(temp_dir, "valid.json")
+        txt_file = os.path.join(temp_dir, "ignored.txt")
+        
+        with open(json_file, "w", encoding="utf-8") as f:
+            json.dump({"validkey": "valid value"}, f)
+        
+        with open(txt_file, "w", encoding="utf-8") as f:
+            f.write("this should be ignored")
+        
+        contractions.load_folder(temp_dir)
+        assert contractions.expand("validkey") == "valid value"
+
+
+def test_load_folder_not_found() -> None:
+    with pytest.raises(FileNotFoundError, match="Folder not found"):
+        contractions.load_folder("/nonexistent/folder/path")
+
+
+def test_load_folder_not_directory() -> None:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
+        json.dump({"test": "data"}, f)
+        temp_path = f.name
+    
+    try:
+        with pytest.raises(NotADirectoryError, match="not a directory"):
+            contractions.load_folder(temp_path)
+    finally:
+        os.unlink(temp_path)
+
+
+def test_load_folder_no_json_files() -> None:
+    with tempfile.TemporaryDirectory() as temp_dir:
+        txt_file = os.path.join(temp_dir, "file.txt")
+        with open(txt_file, "w", encoding="utf-8") as f:
+            f.write("no json here")
+        
+        with pytest.raises(ValueError, match="No JSON files found"):
+            contractions.load_folder(temp_dir)
+
+
 def test_expand_leftovers_only() -> None:
     text = "I'm happy you're here"
     result = contractions.expand(text, leftovers=True, slang=False)

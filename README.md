@@ -118,6 +118,16 @@ contractions.expand("myterm is great")
 # "my expansion is great"
 ```
 
+Load all JSON files from a folder:
+
+```python
+# Load all *.json files from a directory (ignores non-JSON files)
+contractions.load_folder("./my_contractions/")
+
+contractions.expand("myterm is great")
+# "my expansion is great"
+```
+
 ### Preview Contractions Before Fixing
 
 The `preview()` function lets you see all contractions in a text before expanding them:
@@ -175,6 +185,18 @@ Loads custom contractions from a JSON file.
 **Raises:**
 - `FileNotFoundError`: If the file doesn't exist
 - `json.JSONDecodeError`: If the file contains invalid JSON
+
+### `load_folder(folderpath)`
+
+Loads custom contractions from all JSON files in a directory. Non-JSON files are automatically ignored.
+
+**Parameters:**
+- `folderpath` (str): Path to directory containing JSON files
+
+**Raises:**
+- `FileNotFoundError`: If the folder doesn't exist
+- `NotADirectoryError`: If the path is a file, not a directory
+- `ValueError`: If no JSON files are found in the folder
 
 ### `preview(text, context_chars)`
 
@@ -293,6 +315,7 @@ This fork includes several enhancements over the original `contractions` library
 ### 🆕 New Features
 - **`add_dict()`** - Bulk add custom contractions from a dictionary
 - **`load_file()`** - Load contractions from JSON files
+- **`load_folder()`** - Load all JSON files from a directory
 - **Type hints** - Full type coverage with mypy validation
 - **Better structure** - Modular code organization with single-responsibility modules
 - **Facade API** - Clean, simple public API with shorthand aliases (`e()`, `p()`)
