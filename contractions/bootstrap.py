@@ -1,5 +1,5 @@
 from .file_loader import load_dict_data, load_list_data
-from .transformers import build_apostrophe_variants, normalize_apostrophes
+from .transformer import build_apostrophe_variants, normalize_apostrophes
 
 
 def load_all_contractions() -> tuple[dict[str, str], dict[str, str], dict[str, str]]:
