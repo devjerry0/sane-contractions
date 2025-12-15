@@ -87,6 +87,24 @@ def benchmark_add_dict() -> None:
     contractions.add_dict({"key1": "val1", "key2": "val2", "key3": "val3"})
 
 
+def benchmark_emoji_without_library() -> None:
+    from contractions.emoji_support import EMOJI_AVAILABLE
+    
+    if EMOJI_AVAILABLE:
+        return
+    
+    contractions.expand("this is 🔥 and 💯 amazing 😂 lol", slang=True, emojis=True)
+
+
+def benchmark_emoji_with_library() -> None:
+    from contractions.emoji_support import EMOJI_AVAILABLE
+    
+    if not EMOJI_AVAILABLE:
+        return
+    
+    contractions.expand("this is 🔥 and 💯 amazing 😂 lol", slang=True, emojis=True)
+
+
 def print_results(name: str, results: BenchmarkResults, iterations: int) -> None:
     print(f"\n{name}")
     print(f"  Iterations: {iterations}")
@@ -99,9 +117,13 @@ def print_results(name: str, results: BenchmarkResults, iterations: int) -> None
 
 
 def main() -> None:
+    from contractions.emoji_support import EMOJI_AVAILABLE
+    
     print("=" * 70)
     print("Contractions Library Performance Benchmark")
     print("=" * 70)
+    print(f"Emoji library available: {EMOJI_AVAILABLE}")
+    print()
 
     benchmarks = [
         ("Basic Expand (short text)", benchmark_basic_expand, 1000),
@@ -114,6 +136,11 @@ def main() -> None:
         ("Add Single Entry", benchmark_add_single, 100),
         ("Add Dictionary", benchmark_add_dict, 100),
     ]
+    
+    if EMOJI_AVAILABLE:
+        benchmarks.append(("Emoji Conversion (with library)", benchmark_emoji_with_library, 1000))
+    else:
+        benchmarks.append(("Emoji Passthrough (without library)", benchmark_emoji_without_library, 1000))
 
     results_summary = []
 
