@@ -1,7 +1,8 @@
 import json
-import os
 
-from .matchers import (
+from pathlib import Path
+
+from .matcher import (
     _get_basic_matcher,
     _get_leftovers_matcher,
     _get_leftovers_slang_matcher,
@@ -33,12 +34,11 @@ def add_custom_dict(contractions_dict: dict[str, str]) -> None:
 
 
 def load_custom_from_file(filepath: str) -> None:
-    if not os.path.exists(filepath):
+    path = Path(filepath)
+    if not path.exists():
         raise FileNotFoundError(f"File not found at: {filepath}")
 
-    with open(filepath, encoding="utf-8") as file:
-        contractions_data = json.load(file)
-
+    contractions_data = json.loads(path.read_text(encoding="utf-8"))
     validate_file_contains_dict(contractions_data, filepath)
     add_custom_dict(contractions_data)
 

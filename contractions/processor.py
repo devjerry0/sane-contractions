@@ -1,4 +1,4 @@
-from .matchers import (
+from .matcher import (
     _get_basic_matcher,
     _get_leftovers_matcher,
     _get_leftovers_slang_matcher,
@@ -6,13 +6,6 @@ from .matchers import (
     _get_slang_matcher,
 )
 from .validation import validate_int_param, validate_string_param
-
-
-def _extract_viewing_window(text: str, match_start: int, match_end: int, context_chars: int) -> str:
-    text_length = len(text)
-    window_start = max(0, match_start - context_chars)
-    window_end = min(text_length, match_end + context_chars)
-    return text[window_start:window_end]
 
 
 def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
@@ -29,6 +22,12 @@ def expand(text: str, leftovers: bool = True, slang: bool = True) -> str:
 
     return _get_basic_matcher().replace(text)
 
+def _extract_viewing_window(text: str, match_start: int, match_end: int, context_chars: int) -> str:
+    text_length = len(text)
+    window_start = max(0, match_start - context_chars)
+    window_end = min(text_length, match_end + context_chars)
+    
+    return text[window_start:window_end]
 
 def preview(text: str, context_chars: int) -> list[dict[str, str | int]]:
     validate_int_param(context_chars, "context_chars")

@@ -1,10 +1,21 @@
 import time
+
+from collections.abc import Callable
 from statistics import mean, stdev
+from typing import TypedDict
 
 import contractions
 
 
-def time_function(func, iterations=1000):
+class BenchmarkResults(TypedDict):
+    avg_ms: float
+    std_ms: float
+    min_ms: float
+    max_ms: float
+    total_ms: float
+
+
+def time_function(func: Callable[[], None], iterations: int = 1000) -> BenchmarkResults:
     times = []
     for _ in range(iterations):
         start = time.perf_counter()
@@ -26,12 +37,12 @@ def time_function(func, iterations=1000):
     }
 
 
-def benchmark_basic_expand():
+def benchmark_basic_expand() -> None:
     text = "you're happy and I'm sad but we'll get through it"
     contractions.expand(text)
 
 
-def benchmark_large_text():
+def benchmark_large_text() -> None:
     text = """
     You're going to love this story. I'll tell you all about it.
     We'd been waiting for hours when they're finally arrived.
@@ -43,40 +54,40 @@ def benchmark_large_text():
     contractions.expand(text)
 
 
-def benchmark_no_contractions():
+def benchmark_no_contractions() -> None:
     text = "This is a simple sentence with no contractions at all." * 100
     contractions.expand(text)
 
 
-def benchmark_with_slang():
+def benchmark_with_slang() -> None:
     text = "gonna wanna shoulda coulda ain't" * 50
     contractions.expand(text, slang=True)
 
 
-def benchmark_without_slang():
+def benchmark_without_slang() -> None:
     text = "gonna wanna shoulda coulda ain't" * 50
     contractions.expand(text, slang=False)
 
 
-def benchmark_preview_small():
+def benchmark_preview_small() -> None:
     text = "This's a test. I'd like it."
     contractions.preview(text, 10)
 
 
-def benchmark_preview_large():
+def benchmark_preview_large() -> None:
     text = "You're happy. I'm sad. We'll see. It's fine. They're here." * 100
     contractions.preview(text, 20)
 
 
-def benchmark_add_single():
+def benchmark_add_single() -> None:
     contractions.add("testkey123", "test value")
 
 
-def benchmark_add_dict():
+def benchmark_add_dict() -> None:
     contractions.add_dict({"key1": "val1", "key2": "val2", "key3": "val3"})
 
 
-def print_results(name, results, iterations):
+def print_results(name: str, results: BenchmarkResults, iterations: int) -> None:
     print(f"\n{name}")
     print(f"  Iterations: {iterations}")
     print(f"  Average:    {results['avg_ms']:.4f} ms")
@@ -87,7 +98,7 @@ def print_results(name, results, iterations):
     print(f"  Throughput: {iterations / (results['total_ms'] / 1000):.0f} ops/sec")
 
 
-def main():
+def main() -> None:
     print("=" * 70)
     print("Contractions Library Performance Benchmark")
     print("=" * 70)
@@ -110,7 +121,7 @@ def main():
         print(f"\nRunning: {name}...")
         results = time_function(func, iterations)
         print_results(name, results, iterations)
-        results_summary.append((name, results['avg_ms'], iterations / (results['total_ms'] / 1000)))
+        results_summary.append((name, results["avg_ms"], iterations / (results["total_ms"] / 1000)))
 
     print("\n" + "=" * 70)
     print("Summary")

@@ -10,6 +10,6 @@ repos:
     rev: v1.13.0
     hooks:
       - id: mypy
-        files: ^contractions/
+        files: ^(contractions|tests)/
         additional_dependencies: [types-all]
 

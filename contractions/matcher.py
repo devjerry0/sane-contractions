@@ -10,7 +10,7 @@ _MODE_OBJECT = "object"
 _CASE_INSENSITIVE = "insensitive"
 
 
-def _load_dicts():
+def _load_dicts() -> None:
     if _State.contractions_dict is not None:
         return
 
@@ -24,16 +24,19 @@ def _create_matcher(mode: str, *dicts: dict[str, str]) -> TextSearch:
     return matcher
 
 
-def _get_basic_matcher():
+def _get_basic_matcher() -> TextSearch:
     if _State.basic_matcher is None:
         _load_dicts()
+        assert _State.contractions_dict is not None
         _State.basic_matcher = _create_matcher(_MODE_NORM, _State.contractions_dict)
     return _State.basic_matcher
 
 
-def _get_leftovers_matcher():
+def _get_leftovers_matcher() -> TextSearch:
     if _State.leftovers_matcher is None:
         _load_dicts()
+        assert _State.contractions_dict is not None
+        assert _State.leftovers_dict is not None
         _State.leftovers_matcher = _create_matcher(
             _MODE_NORM,
             _State.contractions_dict,
@@ -42,9 +45,11 @@ def _get_leftovers_matcher():
     return _State.leftovers_matcher
 
 
-def _get_slang_matcher():
+def _get_slang_matcher() -> TextSearch:
     if _State.slang_matcher is None:
         _load_dicts()
+        assert _State.contractions_dict is not None
+        assert _State.slang_dict is not None
         _State.slang_matcher = _create_matcher(
             _MODE_NORM,
             _State.contractions_dict,
@@ -53,9 +58,12 @@ def _get_slang_matcher():
     return _State.slang_matcher
 
 
-def _get_leftovers_slang_matcher():
+def _get_leftovers_slang_matcher() -> TextSearch:
     if _State.leftovers_slang_matcher is None:
         _load_dicts()
+        assert _State.contractions_dict is not None
+        assert _State.leftovers_dict is not None
+        assert _State.slang_dict is not None
         _State.leftovers_slang_matcher = _create_matcher(
             _MODE_NORM,
             _State.contractions_dict,
@@ -65,9 +73,12 @@ def _get_leftovers_slang_matcher():
     return _State.leftovers_slang_matcher
 
 
-def _get_preview_matcher():
+def _get_preview_matcher() -> TextSearch:
     if _State.preview_matcher is None:
         _load_dicts()
+        assert _State.contractions_dict is not None
+        assert _State.leftovers_dict is not None
+        assert _State.slang_dict is not None
         all_keys = list(chain(
             _State.contractions_dict.keys(),
             _State.leftovers_dict.keys(),
