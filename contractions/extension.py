@@ -37,6 +37,5 @@ def load_custom_from_file(filepath: str) -> None:
 
 
 def load_custom_from_folder(folderpath: str) -> None:
-    contractions_data = load_dict_from_folder(folderpath)
-    add_custom_dict(contractions_data)
+    add_custom_dict(load_dict_from_folder(folderpath))
 
