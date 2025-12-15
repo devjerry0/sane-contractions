@@ -16,36 +16,36 @@ def test_insensitivity():
 
 
 def test_add():
-    contractions.add('mychange', 'my change')
-    assert contractions.expand('mychange') == 'my change'
+    contractions.add("mychange", "my change")
+    assert contractions.expand("mychange") == "my change"
 
 
 def test_add_dict():
     custom_dict = {
-        'customone': 'custom one',
-        'customtwo': 'custom two',
-        'customthree': 'custom three',
-        "can't": 'cannot',
-        "won't": 'will not',
-        "shouldn't": 'should not'
+        "customone": "custom one",
+        "customtwo": "custom two",
+        "customthree": "custom three",
+        "can't": "cannot",
+        "won't": "will not",
+        "shouldn't": "should not"
     }
     contractions.add_dict(custom_dict)
 
-    assert contractions.expand('customone') == 'custom one'
-    assert contractions.expand('customtwo') == 'custom two'
-    assert contractions.expand('customthree') == 'custom three'
-    assert contractions.expand('customone and customtwo') == 'custom one and custom two'
+    assert contractions.expand("customone") == "custom one"
+    assert contractions.expand("customtwo") == "custom two"
+    assert contractions.expand("customthree") == "custom three"
+    assert contractions.expand("customone and customtwo") == "custom one and custom two"
 
-    assert contractions.expand('Customone') == 'Custom One'
+    assert contractions.expand("Customone") == "Custom One"
 
-    assert contractions.expand("can't") == 'cannot'
-    assert contractions.expand("won't") == 'will not'
-    assert contractions.expand("shouldn't") == 'should not'
-    assert contractions.expand("Can't") == 'Cannot'
+    assert contractions.expand("can't") == "cannot"
+    assert contractions.expand("won't") == "will not"
+    assert contractions.expand("shouldn't") == "should not"
+    assert contractions.expand("Can't") == "Cannot"
 
 
 def test_ill():
-    txt = 'He is to step down at the end of the week due to ill health'
+    txt = "He is to step down at the end of the week due to ill health"
     assert contractions.expand(txt) == txt
     assert contractions.expand("I'll") == "I will"
 
@@ -55,10 +55,10 @@ def test_preview():
     preview_items = contractions.preview(text, context_chars=10)
     print(preview_items)
     assert len(preview_items) == 2
-    assert preview_items[0]['match'] == "This's"
-    assert preview_items[1]['match'] == "I'd"
-    assert text[preview_items[0]['start']: preview_items[0]['end']] == "This's"
-    assert text[preview_items[1]['start']: preview_items[1]['end']] == "I'd"
+    assert preview_items[0]["match"] == "This's"
+    assert preview_items[1]["match"] == "I'd"
+    assert text[preview_items[0]["start"]: preview_items[0]["end"]] == "This's"
+    assert text[preview_items[1]["start"]: preview_items[1]["end"]] == "I'd"
     assert "This's" in preview_items[0]["viewing_window"]
     assert "I'd" in preview_items[1]["viewing_window"]
     text2 = ""
@@ -112,7 +112,7 @@ def test_load_file():
         "jsoncustom": "json custom"
     }
 
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
         json.dump(test_data, f)
         temp_path = f.name
 
@@ -131,7 +131,7 @@ def test_load_file_file_not_found():
 
 
 def test_load_file_invalid_json():
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
         f.write("{ invalid json }")
         temp_path = f.name
 
@@ -143,7 +143,7 @@ def test_load_file_invalid_json():
 
 
 def test_load_file_non_dict():
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False, encoding='utf-8') as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8") as f:
         json.dump(["not", "a", "dict"], f)
         temp_path = f.name
 

@@ -15,7 +15,7 @@ def test_load_list_data():
     assert len(result) > 0
 
 
-def test_load_dict_data_returns_none(monkeypatch):
+def test_load_dict_data_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("contractions.file_loader.pkgutil.get_data", lambda package, filename: None)
     with pytest.raises(FileNotFoundError, match="Data file not found: test.json"):
         load_dict_data("test.json")
@@ -26,7 +26,7 @@ def test_load_dict_data_wrong_type():
         load_dict_data("safety_keys.json")
 
 
-def test_load_list_data_returns_none(monkeypatch):
+def test_load_list_data_returns_none(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("contractions.file_loader.pkgutil.get_data", lambda package, filename: None)
     with pytest.raises(FileNotFoundError, match="Data file not found: test.json"):
         load_list_data("test.json")

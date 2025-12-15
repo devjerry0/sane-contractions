@@ -1,10 +1,21 @@
 import time
+
+from collections.abc import Callable
 from statistics import mean, stdev
+from typing import TypedDict
 
 import contractions
 
 
-def time_function(func, iterations=1000):
+class BenchmarkResults(TypedDict):
+    avg_ms: float
+    std_ms: float
+    min_ms: float
+    max_ms: float
+    total_ms: float
+
+
+def time_function(func: Callable[[], None], iterations: int = 1000) -> BenchmarkResults:
     times = []
     for _ in range(iterations):
         start = time.perf_counter()
@@ -76,7 +87,7 @@ def benchmark_add_dict():
     contractions.add_dict({"key1": "val1", "key2": "val2", "key3": "val3"})
 
 
-def print_results(name, results, iterations):
+def print_results(name: str, results: BenchmarkResults, iterations: int) -> None:
     print(f"\n{name}")
     print(f"  Iterations: {iterations}")
     print(f"  Average:    {results['avg_ms']:.4f} ms")
@@ -110,7 +121,7 @@ def main():
         print(f"\nRunning: {name}...")
         results = time_function(func, iterations)
         print_results(name, results, iterations)
-        results_summary.append((name, results['avg_ms'], iterations / (results['total_ms'] / 1000)))
+        results_summary.append((name, results["avg_ms"], iterations / (results["total_ms"] / 1000)))
 
     print("\n" + "=" * 70)
     print("Summary")
