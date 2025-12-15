@@ -11,6 +11,9 @@ def replace_emojis_with_text(text: str) -> str:
     if not EMOJI_AVAILABLE:
         return text
     
+    if not any(ord(c) > 127 for c in text):
+        return text
+    
     def emoji_to_text(chars: str, data_dict: dict) -> str:  # pragma: no cover
         shortcode = data_dict["en"]
         text_version = shortcode.strip(":").replace("_", " ").replace("-", " ")
