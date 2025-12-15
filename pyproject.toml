@@ -11,7 +11,7 @@ contractions = ["data/*.json"]
 [project]
 name = "sane-contractions"
 dynamic = ["version"]
-description = "Enhanced fork of contractions library - Expands English contractions with improved performance and new features"
+description = "A modern, actively maintained fork of the contractions library. Expands English contractions (you're → you are) with improved performance, type safety, and new features like bulk dictionary imports and JSON loading. Includes 100% test coverage, full type hints, and works with both pip and uv."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
