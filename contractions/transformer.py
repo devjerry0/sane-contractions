@@ -35,7 +35,7 @@ def _get_combinations(tokens: list[str], joiners: list[str]) -> list[str]:
     return ["".join(combination) for combination in product(*interspersed_options)]
 
 
-def _intersperse(items: list, separator) -> list:
+def _intersperse(items: list, separator: list[str]) -> list:
     num_items = len(items)
     num_separators = num_items - 1
     total_slots = num_items + num_separators
