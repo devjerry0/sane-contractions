@@ -8,6 +8,8 @@ def load_all_contractions() -> tuple[dict[str, str], dict[str, str], dict[str, s
     contractions_dict = load_dict_data("contractions_dict.json")
     leftovers_dict = load_dict_data("leftovers_dict.json")
     slang_dict = load_dict_data("slang_dict.json")
+    emoticon_dict = load_dict_data("emoticon_dict.json")
+    emoji_dict = load_dict_data("emoji_dict.json")
     safety_keys = frozenset(load_list_data("safety_keys.json"))
 
     contractions_dict |= normalize_apostrophes(contractions_dict)
@@ -15,5 +17,7 @@ def load_all_contractions() -> tuple[dict[str, str], dict[str, str], dict[str, s
 
     unsafe_dict = build_apostrophe_variants(contractions_dict, safety_keys)
     slang_dict.update(unsafe_dict)
+    slang_dict.update(emoticon_dict)
+    slang_dict.update(emoji_dict)
 
     return contractions_dict, leftovers_dict, slang_dict

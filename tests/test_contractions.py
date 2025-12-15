@@ -283,3 +283,33 @@ def test_shortcuts() -> None:
     preview_result = contractions.p("it's", 5)
     assert len(preview_result) == 1
     assert preview_result[0]["match"] == "it's"
+
+
+def test_gen_z_slang() -> None:
+    assert contractions.expand("no cap", slang=True) == "no lie"
+    assert contractions.expand("fr fr", slang=True) == "for real for real"
+    assert contractions.expand("bussin", slang=True) == "really good"
+    assert contractions.expand("lowkey fire", slang=True) == "kind of awesome"
+    assert contractions.expand("ngl", slang=True) == "not gonna lie"
+
+
+def test_emoticons() -> None:
+    result = contractions.expand(":)", slang=True)
+    assert "smiley" in result.lower()
+    
+    result = contractions.expand("<3", slang=True)
+    assert "heart" in result.lower()
+    
+    result = contractions.expand(":(", slang=True)
+    assert "sad" in result.lower()
+
+
+def test_emojis() -> None:
+    result = contractions.expand("🔥", slang=True)
+    assert "fire" in result.lower()
+    
+    result = contractions.expand("💯", slang=True)
+    assert "hundred" in result.lower()
+    
+    result = contractions.expand("😂", slang=True)
+    assert "laugh" in result.lower()
