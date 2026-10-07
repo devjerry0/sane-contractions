@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
@@ -11,7 +11,7 @@ contractions = ["data/*.json", "py.typed"]
 [project]
 name = "sane-contractions"
 dynamic = ["version"]
-description = "Enhanced fork of contractions library - Expands English contractions with improved performance and new features"
+description = "Expand English contractions and slang (you're -> you are). Maintained fork of contractions."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -21,30 +21,22 @@ authors = [
 maintainers = [
     {name = "Jeremy Bruns", email = "99199491+devjerry0@users.noreply.github.com"},
 ]
-keywords = ["contractions", "nlp", "text-processing", "slang", "text-expansion"]
+keywords = ["contractions", "nlp", "text-processing", "text-normalization", "slang", "text-expansion"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Intended Audience :: Customer Service",
-    "Intended Audience :: System Administrators",
-    "Operating System :: Microsoft",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: Unix",
-    "Operating System :: POSIX",
-    "Programming Language :: Python",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: System :: Software Distribution",
-    "Topic :: System :: Systems Administration",
     "Topic :: Text Processing :: Linguistic",
-    "Topic :: Utilities",
     "Typing :: Typed",
 ]
 dependencies = [
@@ -66,6 +58,7 @@ Homepage = "https://github.com/devjerry0/sane-contractions"
 Documentation = "https://github.com/devjerry0/sane-contractions#readme"
 Repository = "https://github.com/devjerry0/sane-contractions.git"
 "Bug Tracker" = "https://github.com/devjerry0/sane-contractions/issues"
+Changelog = "https://github.com/devjerry0/sane-contractions/blob/main/CHANGELOG.md"
 "Original Project" = "https://github.com/kootenpv/contractions"
 
 [tool.pytest.ini_options]
