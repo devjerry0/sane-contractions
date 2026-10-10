@@ -5,7 +5,7 @@ from itertools import product
 
 def normalize_apostrophes(contractions: dict[str, str]) -> dict[str, str]:
     return {
-        contraction.replace("'", "'"): expansion
+        contraction.replace("'", "\u2019"): expansion
         for contraction, expansion in contractions.items()
         if "'" in contraction
     }

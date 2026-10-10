@@ -15,6 +15,13 @@ def test_insensitivity() -> None:
     assert contractions.expand("You're happier now") == "You are happier now"
 
 
+def test_curly_apostrophe() -> None:
+    assert contractions.expand("you\u2019re happy now") == "you are happy now"
+    assert contractions.expand("I\u2019m sure they\u2019ll like it") == "I am sure they will like it"
+    assert contractions.expand("we were goin\u2019 home") == "we were going home"
+    assert contractions.preview("you\u2019re", 0)[0]["match"] == "you\u2019re"
+
+
 def test_add() -> None:
     contractions.add("mychange", "my change")
     assert contractions.expand("mychange") == "my change"
